@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"git.xenrox.net/~xenrox/srhtctl/config"
 	"github.com/spf13/cobra"
 )
 
@@ -14,6 +15,7 @@ var rootCmd = &cobra.Command{
 	paste:`,
 }
 
+// Execute is the entrypoint for the main fucntion.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
@@ -22,4 +24,5 @@ func Execute() {
 }
 
 func init() {
+	cobra.OnInitialize(config.InitConfig)
 }
