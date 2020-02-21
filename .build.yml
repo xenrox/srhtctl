@@ -1,0 +1,12 @@
+image: archlinux
+packages:
+  - go-pie
+sources:
+  - git@git.xenrox.net:~xenrox/srhtctl
+tasks:
+  - build: |
+      cd srhtctl
+      go build
+  - run: |
+      cd srhtctl
+      ./srhtctl -h
