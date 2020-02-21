@@ -3,6 +3,10 @@ packages:
   - go-pie
 sources:
   - git@git.xenrox.net:~xenrox/srhtctl
+triggers:
+  - action: email
+    condition: failure
+    to: Thorben Günther <admin@xenrox.net>
 tasks:
   - build: |
       cd srhtctl
