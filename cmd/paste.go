@@ -34,6 +34,16 @@ var deleteCmd = &cobra.Command{
 	},
 }
 
+var cleanupCmd = &cobra.Command{
+	Use:   "cleanup",
+	Short: "Delete expired paste resources",
+	Long:  "",
+	Run: func(cmd *cobra.Command, args []string) {
+		err := api.PasteCleanup()
+		helpers.PrintError(err)
+	},
+}
+
 func init() {
 	rootCmd.AddCommand(pasteCmd)
 
@@ -43,4 +53,6 @@ func init() {
 	createCmd.PersistentFlags().StringVarP(&api.PasteExpiration, "expiration", "e", "", "Paste expiration in days")
 
 	pasteCmd.AddCommand(deleteCmd)
+
+	pasteCmd.AddCommand(cleanupCmd)
 }

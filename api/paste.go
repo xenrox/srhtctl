@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"time"
 
 	"git.xenrox.net/~xenrox/srhtctl/config"
@@ -126,6 +127,51 @@ func PasteDelete(args []string) error {
 	for _, sha := range args {
 		err := pasteDeleteSHA(sha)
 		helpers.PrintError(err)
+	}
+	return nil
+}
+
+// PasteCleanup deletes expired paste resources
+func PasteCleanup() error {
+	logPath, err := pasteGetLog()
+	if err != nil {
+		return err
+	}
+	sec := int(time.Now().Unix())
+	input, err := ioutil.ReadFile(logPath)
+	if err != nil {
+		return err
+	}
+
+	readLines := strings.Split(string(input), "\n")
+	var writeLines []string
+	for i, line := range readLines {
+		pasteInfo := strings.Split(line, ":")
+		if len(pasteInfo) != 2 {
+			continue
+		}
+		deleteTime, err := strconv.Atoi(pasteInfo[1])
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		if sec >= deleteTime {
+			err := pasteDeleteSHA(pasteInfo[0])
+			if err != nil {
+				fmt.Println(err)
+				writeLines = append(writeLines, readLines[i])
+				continue
+			}
+		} else {
+			writeLines = append(writeLines, readLines[i])
+		}
+	}
+	output := strings.Join(writeLines, "\n")
+	output += "\n"
+	err = ioutil.WriteFile(logPath, []byte(output), 0644)
+	if err != nil {
+		return err
 	}
 	return nil
 }
