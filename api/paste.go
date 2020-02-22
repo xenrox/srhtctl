@@ -37,9 +37,6 @@ type pasteFileStruct struct {
 	Filename string `json:"filename"`
 }
 
-// PasteFile is the path to the file that should be uploaded
-var PasteFile string
-
 // PasteName is the name of the file that should be uploaded
 var PasteName string
 
@@ -50,27 +47,32 @@ var PasteVisibility string
 var PasteExpiration string
 
 // PasteCreate creates a new paste resource
-func PasteCreate() error {
-	var escapedContent, name string
+func PasteCreate(args []string) error {
+	var body pasteCreateStruct
 
-	if PasteFile != "" {
-		fileContent, err := ioutil.ReadFile(PasteFile)
-		if err != nil {
-			return err
+	// TODO: refactor
+
+	if len(args) > 0 {
+		body.Files = make([]pasteFileStruct, len(args))
+
+		for i, file := range args {
+			body.Files[i].Filename = filepath.Base(file)
+			fileContent, err := ioutil.ReadFile(file)
+			if err != nil {
+				return err
+			}
+			body.Files[i].Contents = string(fileContent)
 		}
-		escapedContent, err = helpers.EscapeJSON(string(fileContent))
-		if err != nil {
-			return err
-		}
-		name = filepath.Base(PasteFile)
 	} else {
 		// paste from clipboard
 		stringContent, err := clipboard.ReadAll()
 		if err != nil {
 			return err
 		}
-		escapedContent, err = helpers.EscapeJSON(stringContent)
-		name = PasteName
+
+		body.Files = make([]pasteFileStruct, 1)
+		body.Files[0].Filename = PasteName
+		body.Files[0].Contents = stringContent
 	}
 
 	var visibility string
@@ -83,11 +85,7 @@ func PasteCreate() error {
 
 	url := fmt.Sprintf("%s/api/pastes", config.GetURL("paste"))
 
-	var body pasteCreateStruct
 	body.Visibility = visibility
-	body.Files = make([]pasteFileStruct, 1)
-	body.Files[0].Filename = name
-	body.Files[0].Contents = escapedContent
 
 	var response pasteStruct
 	err := Request(url, "POST", body, &response)

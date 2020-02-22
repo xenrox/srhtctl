@@ -19,7 +19,7 @@ var createCmd = &cobra.Command{
 	Short: "Create a new paste resource",
 	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
-		err := api.PasteCreate()
+		err := api.PasteCreate(args)
 		helpers.PrintError(err)
 	},
 }
@@ -29,7 +29,7 @@ var deleteCmd = &cobra.Command{
 	Short: "Delete a paste resource",
 	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
-		err := api.PasteDelete()
+		err := api.PasteDelete(args)
 		helpers.PrintError(err)
 	},
 }
@@ -38,7 +38,6 @@ func init() {
 	rootCmd.AddCommand(pasteCmd)
 
 	pasteCmd.AddCommand(createCmd)
-	createCmd.PersistentFlags().StringVarP(&api.PasteFile, "file", "f", "", "File to upload")
 	createCmd.PersistentFlags().StringVarP(&api.PasteName, "name", "n", "unnamed", "Name for paste file")
 	createCmd.PersistentFlags().StringVarP(&api.PasteVisibility, "visibility", "v", "", "Paste visibility")
 	createCmd.PersistentFlags().StringVarP(&api.PasteExpiration, "expiration", "e", "", "Paste expiration in days")
