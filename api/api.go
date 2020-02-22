@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"git.xenrox.net/~xenrox/srhtctl/config"
+	"github.com/atotto/clipboard"
 )
 
 // Request does the actual API request
@@ -37,4 +38,15 @@ func Request(url string, method string, body interface{}, response interface{}) 
 	}
 	json.Unmarshal(responseBody, &response)
 	return nil
+}
+
+// HandleResponse prints the response and can copy it to clipboard
+func HandleResponse(response string) {
+	if response == "" {
+		return
+	}
+	if config.GetConfigValue("settings", "copyToClipboard", "false") == "true" {
+		clipboard.WriteAll(response)
+	}
+	fmt.Println(response)
 }
