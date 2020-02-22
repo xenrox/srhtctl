@@ -116,7 +116,7 @@ func PasteCreate(args []string) error {
 		helpers.PrintError(err)
 	}
 
-	HandleResponse(fmt.Sprintf("%s/%s/%s\n", config.GetURL("paste"), response.User.CName, response.SHA))
+	HandleResponse(fmt.Sprintf("%s/%s/%s\n", config.GetURL("paste"), response.User.CName, response.SHA), true)
 
 	return nil
 }

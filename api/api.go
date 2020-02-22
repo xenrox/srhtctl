@@ -43,11 +43,11 @@ func Request(url string, method string, body interface{}, response ...interface{
 }
 
 // HandleResponse prints the response and can copy it to clipboard
-func HandleResponse(response string) {
+func HandleResponse(response string, copy bool) {
 	if response == "" {
 		return
 	}
-	if config.GetConfigValue("settings", "copyToClipboard", "false") == "true" {
+	if config.GetConfigValue("settings", "copyToClipboard", "false") == "true" && copy {
 		clipboard.WriteAll(response)
 	}
 	fmt.Println(response)
