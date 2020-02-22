@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/vaughan0/go-ini"
 )
@@ -41,4 +42,13 @@ func GetConfigValue(section string, key string, defaultValue ...string) string {
 		}
 	}
 	return value
+}
+
+// GetURL returns a formatted url for a service
+func GetURL(service string) string {
+	url := GetConfigValue(service, "url", fmt.Sprintf("%s.sr.ht", service))
+	if strings.HasPrefix(url, "https://") {
+		return url
+	}
+	return fmt.Sprintf("https://%s", url)
 }
