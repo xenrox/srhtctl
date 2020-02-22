@@ -1,6 +1,10 @@
 package cmd
 
-import "github.com/spf13/cobra"
+import (
+	"git.xenrox.net/~xenrox/srhtctl/api"
+	"git.xenrox.net/~xenrox/srhtctl/helpers"
+	"github.com/spf13/cobra"
+)
 
 var pasteCmd = &cobra.Command{
 	Use:   "paste",
@@ -15,10 +19,17 @@ var createCmd = &cobra.Command{
 	Short: "Create a new paste resource",
 	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
+		err := api.PasteCreate()
+		helpers.PrintError(err)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(pasteCmd)
+
 	pasteCmd.AddCommand(createCmd)
+	createCmd.PersistentFlags().StringVarP(&api.PasteFile, "file", "f", "", "File to upload")
+	createCmd.PersistentFlags().StringVarP(&api.PasteName, "name", "n", "unnamed", "Name for paste file")
+	createCmd.PersistentFlags().StringVarP(&api.PasteVisibility, "visibility", "v", "", "Paste visibility")
+
 }
