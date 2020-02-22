@@ -120,6 +120,27 @@ func PasteCreate(args []string) error {
 	return nil
 }
 
+// PasteDelete deletes multiple paste resources
+func PasteDelete(args []string) error {
+	// TODO: maybe delete from clipboard too
+	for _, sha := range args {
+		err := pasteDeleteSHA(sha)
+		helpers.PrintError(err)
+	}
+	return nil
+}
+
+func pasteDeleteSHA(sha string) error {
+	// TODO: feedback if paste was already deleted
+	url := fmt.Sprintf("%s/api/pastes/%s", config.GetURL("paste"), sha)
+	body := ""
+	err := Request(url, "DELETE", body)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func pasteGetLog() (string, error) {
 	logPath := config.GetConfigValue("paste", "logfile", "")
 	if logPath == "" {
