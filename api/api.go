@@ -13,7 +13,7 @@ import (
 )
 
 // Request does the actual API request
-func Request(url string, method string, body interface{}, response interface{}) error {
+func Request(url string, method string, body interface{}, response ...interface{}) error {
 	client := &http.Client{Timeout: 3 * time.Second}
 
 	jsonBody, err := json.Marshal(body)
@@ -36,7 +36,9 @@ func Request(url string, method string, body interface{}, response interface{}) 
 	if err != nil {
 		return err
 	}
-	json.Unmarshal(responseBody, &response)
+	if len(response) > 0 {
+		json.Unmarshal(responseBody, &response[0])
+	}
 	return nil
 }
 
