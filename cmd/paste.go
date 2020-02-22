@@ -31,5 +31,5 @@ func init() {
 	createCmd.PersistentFlags().StringVarP(&api.PasteFile, "file", "f", "", "File to upload")
 	createCmd.PersistentFlags().StringVarP(&api.PasteName, "name", "n", "unnamed", "Name for paste file")
 	createCmd.PersistentFlags().StringVarP(&api.PasteVisibility, "visibility", "v", "", "Paste visibility")
-
+	createCmd.PersistentFlags().StringVarP(&api.PasteExpiration, "expiration", "e", "", "Paste expiration in days")
 }

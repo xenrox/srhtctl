@@ -3,7 +3,10 @@ package api
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 	"path/filepath"
+	"strconv"
+	"time"
 
 	"git.xenrox.net/~xenrox/srhtctl/config"
 	"git.xenrox.net/~xenrox/srhtctl/helpers"
@@ -42,6 +45,9 @@ var PasteName string
 
 // PasteVisibility is the visibility of the file that should be uploaded
 var PasteVisibility string
+
+// PasteExpiration is the duration that the paste should live
+var PasteExpiration string
 
 // PasteCreate creates a new paste resource
 func PasteCreate() error {
@@ -89,5 +95,39 @@ func PasteCreate() error {
 		return err
 	}
 
+	var expiration string
+	if PasteExpiration != "" {
+		expiration = PasteExpiration
+	} else {
+		expiration = config.GetConfigValue("paste", "expiration", "0")
+	}
+	if expiration != "0" {
+		logPath, err := pasteGetLog()
+		helpers.PrintError(err)
+		f, err := os.OpenFile(logPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+		helpers.PrintError(err)
+		defer f.Close()
+
+		sec := int(time.Now().Unix())
+		expirationDays, err := strconv.Atoi(expiration)
+		helpers.PrintError(err)
+		sec += expirationDays * 24 * 60 * 60
+		timeStamp := strconv.Itoa(sec)
+		_, err = f.WriteString(fmt.Sprintf("%s:%s\n", response.SHA, timeStamp))
+		helpers.PrintError(err)
+	}
+
 	return nil
+}
+
+func pasteGetLog() (string, error) {
+	logPath := config.GetConfigValue("paste", "logfile", "")
+	if logPath == "" {
+		xdgConfigHome, err := os.UserConfigDir()
+		if err != nil {
+			return "", err
+		}
+		logPath = fmt.Sprintf("%s/srhtctl/pastes.log", xdgConfigHome)
+	}
+	return logPath, nil
 }
