@@ -10,7 +10,7 @@ triggers:
 tasks:
   - build: |
       cd srhtctl
-      go build
+      make
   - run: |
       cd srhtctl
       ./srhtctl -h
