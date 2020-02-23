@@ -1,8 +1,11 @@
 image: archlinux
 packages:
   - go-pie
+  - annotatego-git
 sources:
   - git@git.xenrox.net:~xenrox/srhtctl
+secrets:
+  - a5711144-f06c-44b2-9632-9e6fda0e28e8
 triggers:
   - action: email
     condition: failure
@@ -14,3 +17,7 @@ tasks:
   - run: |
       cd srhtctl
       ./srhtctl -h
+  - annotate: |
+      cd srhtctl
+      annotatego -v git.xenrox.net/~xenrox/srhtctl... > annotations.json
+      ~/upload-annotations annotations.json xenrox srhtctl
