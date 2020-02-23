@@ -37,7 +37,12 @@ func Request(url string, method string, body interface{}, response ...interface{
 		return err
 	}
 	if len(response) > 0 {
-		json.Unmarshal(responseBody, &response[0])
+		switch v := response[0].(type) {
+		case *string:
+			*v = string(responseBody)
+		default:
+			json.Unmarshal(responseBody, v)
+		}
 	}
 	return nil
 }
