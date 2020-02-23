@@ -25,28 +25,48 @@ func BuildDeploy(args []string) error {
 		fmt.Println("Please append build manifests")
 	} else {
 		for _, file := range args {
-			err := buildDeployManifest(file)
+			manifest, err := ioutil.ReadFile(file)
+			if err != nil {
+				return err
+			}
+			err = buildDeployManifest(string(manifest))
 			helpers.PrintError(err)
 		}
 	}
 	return nil
 }
 
-func buildDeployManifest(file string) error {
-	url := fmt.Sprintf("%s/api/jobs", config.GetURL("builds"))
-	manifestContent, err := ioutil.ReadFile(file)
+// BuildResubmit resubmits a build ID
+func BuildResubmit(args []string) error {
+	if len(args) != 1 {
+		fmt.Println("Please append one build ID")
+		return nil
+	}
+	var manifest string
+	url := fmt.Sprintf("%s/api/jobs/%s/manifest", config.GetURL("builds"), args[0])
+	err := Request(url, "GET", "", &manifest)
 	if err != nil {
 		return err
 	}
+	err = buildDeployManifest(manifest)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func buildDeployManifest(manifest string) error {
+	url := fmt.Sprintf("%s/api/jobs", config.GetURL("builds"))
 	var body manifestStruct
 	// TODO: parse tags and notes too with flags
-	body.Manifest = string(manifestContent)
+	body.Manifest = manifest
 
 	var response manifestResponseStruct
-	err = Request(url, "POST", body, &response)
+	err := Request(url, "POST", body, &response)
 	if err != nil {
 		return err
 	}
+	// TODO: send upstream patch for a better response with username
 	HandleResponse(fmt.Sprintf("Deployed build with build ID %s to %s", strconv.Itoa(response.ID), config.GetURL("builds")), false)
 	return nil
 }

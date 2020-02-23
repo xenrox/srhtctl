@@ -24,8 +24,18 @@ var deployCmd = &cobra.Command{
 	},
 }
 
+var resubmitCmd = &cobra.Command{
+	Use:   "resubmit",
+	Short: "Resubmit a build",
+	Long:  "",
+	Run: func(cmd *cobra.Command, args []string) {
+		err := api.BuildResubmit(args)
+		helpers.PrintError(err)
+	}}
+
 func init() {
 	rootCmd.AddCommand(buildCmd)
 
 	buildCmd.AddCommand(deployCmd)
+	buildCmd.AddCommand(resubmitCmd)
 }
