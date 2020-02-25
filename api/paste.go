@@ -107,12 +107,11 @@ func PasteCreate(args []string) error {
 		helpers.PrintError(err)
 		defer f.Close()
 
-		sec := int(time.Now().Unix())
+		timeStamp := int(time.Now().Unix())
 		expirationDays, err := strconv.Atoi(expiration)
 		helpers.PrintError(err)
-		sec += expirationDays * 24 * 60 * 60
-		timeStamp := strconv.Itoa(sec)
-		_, err = f.WriteString(fmt.Sprintf("%s:%s\n", response.SHA, timeStamp))
+		timeStamp += expirationDays * 24 * 60 * 60
+		_, err = f.WriteString(fmt.Sprintf("%s:%d\n", response.SHA, timeStamp))
 		helpers.PrintError(err)
 	}
 
@@ -159,7 +158,11 @@ func PasteCleanup() error {
 		if sec >= deleteTime {
 			err := pasteDeleteSHA(pasteInfo[0])
 			if err != nil {
-				fmt.Println(err)
+				// if paste is already deleted remove entry
+				if strings.Contains(err.Error(), "404 not found") {
+					fmt.Printf("Paste %s already deleted. Removing entry.\n", pasteInfo[0])
+					continue
+				}
 				writeLines = append(writeLines, readLines[i])
 				continue
 			}
