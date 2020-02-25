@@ -22,13 +22,13 @@ type apiError struct {
 }
 
 func (e apiErrorResponse) Error() string {
-	err := "Error respose from the API:\n"
+	err := "Error respose from the API:"
 	for _, errors := range e.Errors {
 		if errors.Field != "" {
-			err += fmt.Sprintf("%s: %s\n", errors.Field, errors.Reason)
+			err += fmt.Sprintf("\n%s: %s", errors.Field, errors.Reason)
 
 		} else {
-			err += fmt.Sprintf("%s\n", errors.Reason)
+			err += fmt.Sprintf("\n%s", errors.Reason)
 		}
 	}
 	return err

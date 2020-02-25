@@ -1,6 +1,7 @@
 package api
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"strconv"
@@ -22,17 +23,17 @@ type manifestResponseStruct struct {
 // BuildDeploy deploys build manifests from command line
 func BuildDeploy(args []string) error {
 	if len(args) == 0 {
-		fmt.Println("Please append build manifests")
-	} else {
-		for _, file := range args {
-			manifest, err := ioutil.ReadFile(file)
-			if err != nil {
-				return err
-			}
-			err = buildDeployManifest(string(manifest))
-			helpers.PrintError(err)
-		}
+		return errors.New("Please append build manifests")
 	}
+	for _, file := range args {
+		manifest, err := ioutil.ReadFile(file)
+		if err != nil {
+			return err
+		}
+		err = buildDeployManifest(string(manifest))
+		helpers.PrintError(err)
+	}
+
 	return nil
 }
 

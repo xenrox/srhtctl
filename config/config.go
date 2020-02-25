@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 
+	"git.xenrox.net/~xenrox/srhtctl/helpers"
 	"github.com/vaughan0/go-ini"
 )
 
@@ -15,12 +16,12 @@ var configFile ini.File
 func LoadConfig() ini.File {
 	xdgConfigHome, err := os.UserConfigDir()
 	if err != nil {
-		log.Fatalln("Could not determine XDG_CONFIG_HOME")
+		helpers.ExitError(err)
 	}
 	configPath := fmt.Sprintf("%s/srhtctl/config.ini", xdgConfigHome)
 	file, err := ini.LoadFile(configPath)
 	if err != nil {
-		log.Fatalf("config.ini could not be read. Please create %s.\n", configPath)
+		helpers.ExitError(err)
 	}
 	return file
 }

@@ -20,7 +20,7 @@ var deployCmd = &cobra.Command{
 	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
 		err := api.BuildDeploy(args)
-		helpers.PrintError(err)
+		helpers.ExitError(err)
 	},
 }
 
@@ -30,7 +30,7 @@ var resubmitCmd = &cobra.Command{
 	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
 		err := api.BuildResubmit(args)
-		helpers.PrintError(err)
+		helpers.ExitError(err)
 	}}
 
 func init() {

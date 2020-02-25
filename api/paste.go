@@ -1,6 +1,7 @@
 package api
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -102,17 +103,17 @@ func PasteCreate(args []string) error {
 	}
 	if expiration != "0" {
 		logPath, err := pasteGetLog()
-		helpers.PrintError(err)
+		helpers.ExitError(err)
 		f, err := os.OpenFile(logPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-		helpers.PrintError(err)
+		helpers.ExitError(err)
 		defer f.Close()
 
 		timeStamp := int(time.Now().Unix())
 		expirationDays, err := strconv.Atoi(expiration)
-		helpers.PrintError(err)
+		helpers.ExitError(err)
 		timeStamp += expirationDays * 24 * 60 * 60
 		_, err = f.WriteString(fmt.Sprintf("%s:%d\n", response.SHA, timeStamp))
-		helpers.PrintError(err)
+		helpers.ExitError(err)
 	}
 
 	HandleResponse(fmt.Sprintf("%s/%s/%s\n", config.GetURL("paste"), response.User.CName, response.SHA), true)
@@ -122,7 +123,9 @@ func PasteCreate(args []string) error {
 
 // PasteDelete deletes multiple paste resources
 func PasteDelete(args []string) error {
-	// TODO: maybe delete from clipboard too
+	if len(args) == 0 {
+		return errors.New("Please append paste SHA hashes")
+	}
 	for _, sha := range args {
 		err := pasteDeleteSHA(sha)
 		helpers.PrintError(err)

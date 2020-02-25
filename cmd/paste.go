@@ -20,7 +20,7 @@ var createCmd = &cobra.Command{
 	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
 		err := api.PasteCreate(args)
-		helpers.PrintError(err)
+		helpers.ExitError(err)
 	},
 }
 
@@ -30,7 +30,7 @@ var deleteCmd = &cobra.Command{
 	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
 		err := api.PasteDelete(args)
-		helpers.PrintError(err)
+		helpers.ExitError(err)
 	},
 }
 
@@ -40,7 +40,7 @@ var cleanupCmd = &cobra.Command{
 	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
 		err := api.PasteCleanup()
-		helpers.PrintError(err)
+		helpers.ExitError(err)
 	},
 }
 
