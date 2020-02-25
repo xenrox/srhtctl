@@ -4,16 +4,34 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"strconv"
 
 	"git.xenrox.net/~xenrox/srhtctl/config"
 	"git.xenrox.net/~xenrox/srhtctl/helpers"
 )
 
-type manifestStruct struct {
+type buildDeployStruct struct {
 	Manifest string `json:"manifest"`
 	Note     string `json:"Note"`
 	// Tags     []string `json:"tags"`
+}
+
+type taskStruct struct {
+	Name   string `json:"name"`
+	Status string `json:"status"`
+	Log    string `json:"log"`
+}
+
+type buildStruct struct {
+	ID       int          `json:"id"`
+	Status   string       `json:"status"`
+	SetupLog string       `json:"setup_log"`
+	Tasks    []taskStruct `json:"tasks"`
+	Note     string       `json:"note"`
+	Runner   string       `json:"runner"`
+	Owner    struct {
+		CName string `json:"canonical_name"`
+		Name  string `json:"name"`
+	} `json:"owner"`
 }
 
 type manifestResponseStruct struct {
@@ -58,16 +76,15 @@ func BuildResubmit(args []string) error {
 
 func buildDeployManifest(manifest string) error {
 	url := fmt.Sprintf("%s/api/jobs", config.GetURL("builds"))
-	var body manifestStruct
+	var body buildDeployStruct
 	// TODO: parse tags and notes too with flags
 	body.Manifest = manifest
 
-	var response manifestResponseStruct
+	var response buildStruct
 	err := Request(url, "POST", body, &response)
 	if err != nil {
 		return err
 	}
-	// TODO: send upstream patch for a better response with username
-	HandleResponse(fmt.Sprintf("Deployed build with build ID %s to %s", strconv.Itoa(response.ID), config.GetURL("builds")), false)
+	HandleResponse(fmt.Sprintf("%s/%s/job/%d\n", config.GetURL("builds"), response.Owner.CName, response.ID), true)
 	return nil
 }
