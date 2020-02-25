@@ -12,6 +12,28 @@ import (
 	"github.com/atotto/clipboard"
 )
 
+type apiErrorResponse struct {
+	Errors []apiError `json:"errors"`
+}
+
+type apiError struct {
+	Reason string `json:"reason"`
+	Field  string `json:"field"`
+}
+
+func (e apiErrorResponse) Error() string {
+	err := "Error respose from the API:\n"
+	for _, errors := range e.Errors {
+		if errors.Field != "" {
+			err += fmt.Sprintf("%s: %s\n", errors.Field, errors.Reason)
+
+		} else {
+			err += fmt.Sprintf("%s\n", errors.Reason)
+		}
+	}
+	return err
+}
+
 // Request does the actual API request
 func Request(url string, method string, body interface{}, response ...interface{}) error {
 	client := &http.Client{Timeout: 3 * time.Second}
@@ -36,6 +58,13 @@ func Request(url string, method string, body interface{}, response ...interface{
 	if err != nil {
 		return err
 	}
+
+	if resp.StatusCode >= 400 {
+		var errorResponse apiErrorResponse
+		json.Unmarshal(responseBody, &errorResponse)
+		return errorResponse
+	}
+
 	if len(response) > 0 {
 		switch v := response[0].(type) {
 		case *string:
