@@ -31,11 +31,24 @@ var resubmitCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		err := api.BuildResubmit(args)
 		helpers.ExitError(err)
-	}}
+	},
+}
+
+var infoCmd = &cobra.Command{
+	Use:   "info",
+	Short: "Get information about a job by its ID",
+	Long:  "",
+	Run: func(cmd *cobra.Command, args []string) {
+		err := api.BuildInformation(args)
+		helpers.ExitError(err)
+	},
+}
 
 func init() {
 	rootCmd.AddCommand(buildCmd)
 
 	buildCmd.AddCommand(deployCmd)
 	buildCmd.AddCommand(resubmitCmd)
+
+	buildCmd.AddCommand(infoCmd)
 }

@@ -27,6 +27,7 @@ type buildStruct struct {
 	SetupLog string       `json:"setup_log"`
 	Tasks    []taskStruct `json:"tasks"`
 	Note     string       `json:"note"`
+	Tags     []string     `json:"tags"`
 	Runner   string       `json:"runner"`
 	Owner    struct {
 		CName string `json:"canonical_name"`
@@ -71,6 +72,22 @@ func BuildResubmit(args []string) error {
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+// BuildInformation gets information about a job by its ID
+func BuildInformation(args []string) error {
+	if len(args) != 1 {
+		fmt.Println("Please append one build ID")
+	}
+	var response buildStruct
+	url := fmt.Sprintf("%s/api/jobs/%s", config.GetURL("builds"), args[0])
+	err := Request(url, "GET", "", &response)
+	if err != nil {
+		return err
+	}
+	// TODO: write good print function that iterates through tasks
+	fmt.Println(response)
 	return nil
 }
 
