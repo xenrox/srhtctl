@@ -4,8 +4,12 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"net/http"
+	"strconv"
+	"strings"
 
 	"git.xenrox.net/~xenrox/srhtctl/config"
+	"git.xenrox.net/~xenrox/srhtctl/helpers"
 	"git.xenrox.net/~xenrox/srhtctl/helpers/errorhelper"
 )
 
@@ -77,8 +81,7 @@ func BuildInformation(args []string) error {
 	if err != nil {
 		return err
 	}
-	printBuildInformation(response)
-	return nil
+	return printBuildInformation(response)
 }
 
 func buildDeployManifest(manifest string) error {
@@ -96,12 +99,52 @@ func buildDeployManifest(manifest string) error {
 	return nil
 }
 
-func printBuildInformation(information buildStruct) {
+func printBuildInformation(information buildStruct) error {
 	fmt.Printf("Build %d: %s\n", information.ID, formatBuildStatus(information.Status))
 	for _, task := range information.Tasks {
 		fmt.Printf("\tTask %s: %s\n", task.Name, formatBuildStatus(task.Status))
 	}
-	// TODO: if failed, and flag/config option set: append last lines of failed log
+	if information.Status == "failed" {
+		debugLines := config.GetConfigValue("builds", "debugLines", "0")
+		if debugLines != "0" {
+			length, err := strconv.Atoi(debugLines)
+			if err != nil {
+				return err
+			}
+			fmt.Printf("\n\nBuild setup failed with:\n\n")
+			err = printBuildErrors(information.SetupLog, length)
+			if err != nil {
+				return err
+			}
+			for _, task := range information.Tasks {
+				if task.Status == "failed" {
+					fmt.Printf("\nTask %s failed with:\n\n", task.Name)
+					err = printBuildErrors(task.Log, length)
+					if err != nil {
+						return err
+					}
+				}
+			}
+		}
+	}
+	return nil
+}
+
+func printBuildErrors(url string, length int) error {
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	responseBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+	lines := strings.Split(string(responseBody), "\n")
+	for _, line := range lines[helpers.Max(len(lines)-length, 0):] {
+		fmt.Println(line)
+	}
+	return nil
 }
 
 func formatBuildStatus(status string) string {
