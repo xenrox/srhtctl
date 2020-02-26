@@ -111,14 +111,14 @@ func printBuildInformation(information buildStruct) error {
 			if err != nil {
 				return err
 			}
-			fmt.Printf("\n\nBuild setup failed with:\n\n")
+			fmt.Printf("\n\n\033[4mBuild setup failed with:\033[0m\n\n")
 			err = printBuildErrors(information.SetupLog, length)
 			if err != nil {
 				return err
 			}
 			for _, task := range information.Tasks {
 				if task.Status == "failed" {
-					fmt.Printf("\nTask %s failed with:\n\n", task.Name)
+					fmt.Printf("\n\033[4mTask %s failed with:\033[0m\n\n", task.Name)
 					err = printBuildErrors(task.Log, length)
 					if err != nil {
 						return err
