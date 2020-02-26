@@ -106,4 +106,26 @@ func buildDeployManifest(manifest string) error {
 }
 
 func printBuildInformation(information buildStruct) {
+	fmt.Printf("Build %d: %s\n", information.ID, formatBuildStatus(information.Status))
+	for _, task := range information.Tasks {
+		fmt.Printf("\tTask %s: %s\n", task.Name, formatBuildStatus(task.Status))
+	}
+	// TODO: if failed, and flag/config option set: append last lines of failed log
+}
+
+func formatBuildStatus(status string) string {
+	switch status {
+	case "running":
+		status = fmt.Sprintf("\033[94m%s\033[0m", status)
+	case "success":
+		status = fmt.Sprintf("\033[92m%sful\033[0m", status)
+	case "failed":
+		status = fmt.Sprintf("\033[91m%s\033[0m", status)
+	case "cancelled":
+		status = fmt.Sprintf("\033[93m%s\033[0m", status)
+	// default: pending or queued
+	default:
+		status = fmt.Sprintf("\033[1m%s\033[0m", status)
+	}
+	return status
 }
