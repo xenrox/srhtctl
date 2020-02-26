@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 
@@ -56,6 +57,9 @@ func BuildDeploy(args []string) error {
 	return nil
 }
 
+// BuildEdit If true, then edit the manifest before resubmit
+var BuildEdit bool
+
 // BuildResubmit resubmits a build ID
 func BuildResubmit(args []string) error {
 	if len(args) != 1 {
@@ -66,6 +70,31 @@ func BuildResubmit(args []string) error {
 	err := Request(url, "GET", "", &manifest)
 	if err != nil {
 		return err
+	}
+	if BuildEdit {
+		file, err := ioutil.TempFile(os.TempDir(), "srhtctl*.yml")
+		if err != nil {
+			return err
+		}
+		fileName := file.Name()
+		defer os.Remove(fileName)
+		_, err = file.WriteString(manifest)
+		if err != nil {
+			return err
+		}
+		err = file.Close()
+		if err != nil {
+			return err
+		}
+		err = helpers.EditFile(fileName)
+		if err != nil {
+			return err
+		}
+		fileContent, err := ioutil.ReadFile(fileName)
+		if err != nil {
+			return err
+		}
+		return buildDeployManifest(string(fileContent))
 	}
 	return buildDeployManifest(manifest)
 }

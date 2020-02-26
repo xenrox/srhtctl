@@ -48,7 +48,9 @@ func init() {
 	rootCmd.AddCommand(buildCmd)
 
 	buildCmd.AddCommand(deployCmd)
+
 	buildCmd.AddCommand(resubmitCmd)
+	resubmitCmd.PersistentFlags().BoolVarP(&api.BuildEdit, "edit", "e", false, "Edit manifest")
 
 	buildCmd.AddCommand(infoCmd)
 }
