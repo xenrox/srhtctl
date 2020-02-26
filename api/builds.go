@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 
 	"git.xenrox.net/~xenrox/srhtctl/config"
-	"git.xenrox.net/~xenrox/srhtctl/helpers"
+	"git.xenrox.net/~xenrox/srhtctl/helpers/errorhelper"
 )
 
 type buildDeployStruct struct {
@@ -50,7 +50,7 @@ func BuildDeploy(args []string) error {
 			return err
 		}
 		err = buildDeployManifest(string(manifest))
-		helpers.PrintError(err)
+		errorhelper.PrintError(err)
 	}
 
 	return nil
@@ -86,8 +86,7 @@ func BuildInformation(args []string) error {
 	if err != nil {
 		return err
 	}
-	// TODO: write good print function that iterates through tasks
-	fmt.Println(response)
+	printBuildInformation(response)
 	return nil
 }
 
@@ -104,4 +103,7 @@ func buildDeployManifest(manifest string) error {
 	}
 	HandleResponse(fmt.Sprintf("%s/%s/job/%d\n", config.GetURL("builds"), response.Owner.CName, response.ID), true)
 	return nil
+}
+
+func printBuildInformation(information buildStruct) {
 }

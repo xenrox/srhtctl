@@ -1,4 +1,4 @@
-package helpers
+package errorhelper
 
 import (
 	"fmt"
@@ -14,6 +14,8 @@ func PrintError(err error) {
 
 // ExitError calls PrintError and exits the program with error code
 func ExitError(err error) {
-	PrintError(err)
-	os.Exit(1)
+	if err != nil {
+		PrintError(err)
+		os.Exit(1)
+	}
 }

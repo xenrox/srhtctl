@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"git.xenrox.net/~xenrox/srhtctl/api"
-	"git.xenrox.net/~xenrox/srhtctl/helpers"
+	"git.xenrox.net/~xenrox/srhtctl/helpers/errorhelper"
 	"github.com/spf13/cobra"
 )
 
@@ -20,7 +20,7 @@ var createCmd = &cobra.Command{
 	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
 		err := api.PasteCreate(args)
-		helpers.ExitError(err)
+		errorhelper.ExitError(err)
 	},
 }
 
@@ -30,7 +30,7 @@ var deleteCmd = &cobra.Command{
 	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
 		err := api.PasteDelete(args)
-		helpers.ExitError(err)
+		errorhelper.ExitError(err)
 	},
 }
 
@@ -40,7 +40,7 @@ var cleanupCmd = &cobra.Command{
 	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
 		err := api.PasteCleanup()
-		helpers.ExitError(err)
+		errorhelper.ExitError(err)
 	},
 }
 

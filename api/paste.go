@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"git.xenrox.net/~xenrox/srhtctl/config"
-	"git.xenrox.net/~xenrox/srhtctl/helpers"
+	"git.xenrox.net/~xenrox/srhtctl/helpers/errorhelper"
 	"github.com/atotto/clipboard"
 )
 
@@ -103,17 +103,17 @@ func PasteCreate(args []string) error {
 	}
 	if expiration != "0" {
 		logPath, err := pasteGetLog()
-		helpers.ExitError(err)
+		errorhelper.ExitError(err)
 		f, err := os.OpenFile(logPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-		helpers.ExitError(err)
+		errorhelper.ExitError(err)
 		defer f.Close()
 
 		timeStamp := int(time.Now().Unix())
 		expirationDays, err := strconv.Atoi(expiration)
-		helpers.ExitError(err)
+		errorhelper.ExitError(err)
 		timeStamp += expirationDays * 24 * 60 * 60
 		_, err = f.WriteString(fmt.Sprintf("%s:%d\n", response.SHA, timeStamp))
-		helpers.ExitError(err)
+		errorhelper.ExitError(err)
 	}
 
 	HandleResponse(fmt.Sprintf("%s/%s/%s\n", config.GetURL("paste"), response.User.CName, response.SHA), true)
@@ -128,7 +128,7 @@ func PasteDelete(args []string) error {
 	}
 	for _, sha := range args {
 		err := pasteDeleteSHA(sha)
-		helpers.PrintError(err)
+		errorhelper.PrintError(err)
 	}
 	return nil
 }
