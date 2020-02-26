@@ -3,9 +3,12 @@ packages:
   - go-pie
   - annotatego-git
 sources:
-  - git@git.xenrox.net:~xenrox/srhtctl
+  - https://git.xenrox.net/~xenrox/srhtctl
+environment:
+  GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
 secrets:
-  - a5711144-f06c-44b2-9632-9e6fda0e28e8
+  - a5711144-f06c-44b2-9632-9e6fda0e28e8 # upload-annotations
+  - 3ef654c2-53ae-4684-a63e-c23ffa3d7ad6 # ssh key
 triggers:
   - action: email
     condition: failure
@@ -21,3 +24,7 @@ tasks:
       cd srhtctl
       annotatego -v git.xenrox.net/~xenrox/srhtctl... > annotations.json
       ~/upload-annotations annotations.json xenrox srhtctl
+  - github: |
+      cd srhtctl
+      git remote add github git@github.com:xenrox/srhtctl.git
+      git push github master --follow-tags
