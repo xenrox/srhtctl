@@ -35,10 +35,6 @@ type buildStruct struct {
 	} `json:"owner"`
 }
 
-type manifestResponseStruct struct {
-	ID int `json:"id"`
-}
-
 // BuildDeploy deploys build manifests from command line
 func BuildDeploy(args []string) error {
 	if len(args) == 0 {
@@ -59,8 +55,7 @@ func BuildDeploy(args []string) error {
 // BuildResubmit resubmits a build ID
 func BuildResubmit(args []string) error {
 	if len(args) != 1 {
-		fmt.Println("Please append one build ID")
-		return nil
+		return errors.New("Please append one build ID")
 	}
 	var manifest string
 	url := fmt.Sprintf("%s/api/jobs/%s/manifest", config.GetURL("builds"), args[0])
@@ -68,17 +63,13 @@ func BuildResubmit(args []string) error {
 	if err != nil {
 		return err
 	}
-	err = buildDeployManifest(manifest)
-	if err != nil {
-		return err
-	}
-	return nil
+	return buildDeployManifest(manifest)
 }
 
 // BuildInformation gets information about a job by its ID
 func BuildInformation(args []string) error {
 	if len(args) != 1 {
-		fmt.Println("Please append one build ID")
+		return errors.New("Please append one build ID")
 	}
 	var response buildStruct
 	url := fmt.Sprintf("%s/api/jobs/%s", config.GetURL("builds"), args[0])

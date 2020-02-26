@@ -183,7 +183,6 @@ func PasteCleanup() error {
 }
 
 func pasteDeleteSHA(sha string) error {
-	// TODO: feedback if paste was already deleted
 	url := fmt.Sprintf("%s/api/pastes/%s", config.GetURL("paste"), sha)
 	body := ""
 	err := Request(url, "DELETE", body)
