@@ -19,7 +19,7 @@ tasks:
       make
   - run: |
       cd srhtctl
-      ./srhtctl -h
+      ./srhtctl completionZSH > /dev/null
   - annotate: |
       cd srhtctl
       annotatego -v git.xenrox.net/~xenrox/srhtctl... > annotations.json

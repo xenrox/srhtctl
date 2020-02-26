@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"strings"
 
@@ -21,7 +20,7 @@ func LoadConfig() ini.File {
 	configPath := fmt.Sprintf("%s/srhtctl/config.ini", xdgConfigHome)
 	file, err := ini.LoadFile(configPath)
 	if err != nil {
-		errorhelper.ExitError(err)
+		errorhelper.PrintError(err)
 	}
 	return file
 }
@@ -39,7 +38,8 @@ func GetConfigValue(section string, key string, defaultValue ...string) string {
 		if len(defaultValue) > 0 {
 			value = defaultValue[0]
 		} else {
-			log.Fatalf("%s missing from section %s in config.ini.\n", key, section)
+			fmt.Fprintf(os.Stderr, "%s missing from section %s in config.ini.\n", key, section)
+			os.Exit(1)
 		}
 	}
 	return value
