@@ -29,6 +29,8 @@ func init() {
 	rootCmd.AddCommand(gitCmd)
 
 	gitCmd.AddCommand(annotateCmd)
-	gitCmd.PersistentFlags().StringVarP(&api.GitUserName, "user", "u", "", "Git user (without ~)")
-	gitCmd.PersistentFlags().StringVarP(&api.GitRepoName, "repo", "r", "", "Git repository name")
+	annotateCmd.Flags().StringVarP(&api.GitUserName, "user", "u", "", "Git user (without ~)")
+	annotateCmd.Flags().StringVarP(&api.GitRepoName, "repo", "r", "", "Git repository name")
+	annotateCmd.MarkFlagRequired("user")
+	annotateCmd.MarkFlagRequired("repo")
 }
