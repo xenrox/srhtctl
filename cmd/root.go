@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"git.xenrox.net/~xenrox/srhtctl/config"
 	"github.com/spf13/cobra"
 )
 
@@ -24,5 +23,5 @@ func Execute() {
 }
 
 func init() {
-	cobra.OnInitialize(config.InitConfig)
+	cobra.OnInitialize()
 }

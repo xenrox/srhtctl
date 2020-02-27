@@ -9,10 +9,10 @@ import (
 	"github.com/vaughan0/go-ini"
 )
 
-var configFile ini.File
+var configFile *ini.File
 
 // LoadConfig parses the config.ini file and returns it.
-func LoadConfig() ini.File {
+func LoadConfig() *ini.File {
 	xdgConfigHome, err := os.UserConfigDir()
 	if err != nil {
 		errorhelper.ExitError(err)
@@ -22,7 +22,7 @@ func LoadConfig() ini.File {
 	if err != nil {
 		errorhelper.PrintError(err)
 	}
-	return file
+	return &file
 }
 
 // InitConfig gets called by cobra and only calls LoadConfig.
@@ -33,6 +33,9 @@ func InitConfig() {
 // GetConfigValue returns a value from the config.ini file as a string.
 // It is possible to set a default value as a third argument.
 func GetConfigValue(section string, key string, defaultValue ...string) string {
+	if configFile == nil {
+		InitConfig()
+	}
 	value, ok := configFile.Get(section, key)
 	if !ok {
 		if len(defaultValue) > 0 {
