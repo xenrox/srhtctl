@@ -13,6 +13,19 @@ import (
 	"github.com/atotto/clipboard"
 )
 
+type shortUserStruct struct {
+	CName string `json:"canonical_name"`
+	Name  string `json:"name"`
+}
+
+type userStruct struct {
+	shortUserStruct
+	Email    string  `json:"email"`
+	URL      *string `json:"url"`
+	Location *string `json:"location"`
+	Bio      *string `json:"bio"`
+}
+
 type apiErrorResponse struct {
 	Errors []apiError `json:"errors"`
 }
