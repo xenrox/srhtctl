@@ -1,0 +1,6 @@
+[Unit]
+Description=Cleanup old pastes
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/srhtctl paste cleanup

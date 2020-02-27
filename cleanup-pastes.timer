@@ -1,0 +1,8 @@
+[Unit]
+Description=Cleanup old pastes
+
+[Timer]
+OnUnitActiveSec=3h
+
+[Install]
+WantedBy=timers.target
