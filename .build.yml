@@ -7,8 +7,8 @@ sources:
 environment:
   GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
 secrets:
-  - a5711144-f06c-44b2-9632-9e6fda0e28e8 # upload-annotations
-  - 3ef654c2-53ae-4684-a63e-c23ffa3d7ad6 # ssh key
+  - 9b9e7b30-8dce-470c-9cad-0701fd958749 # ssh key
+  - 7059f6bc-d2f4-42b5-9a69-421ac0bcecd4 # config.ini
 triggers:
   - action: email
     condition: failure
@@ -23,7 +23,7 @@ tasks:
   - annotate: |
       cd srhtctl
       annotatego -v git.xenrox.net/~xenrox/srhtctl... > annotations.json
-      ~/upload-annotations annotations.json xenrox srhtctl
+      ./srhtctl git annotate --user xenrox --repo srhtctl annotations.json
   - github: |
       cd srhtctl
       git remote add github git@github.com:xenrox/srhtctl.git
