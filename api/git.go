@@ -10,6 +10,10 @@ import (
 	"git.xenrox.net/~xenrox/srhtctl/config"
 )
 
+type annotateResponseStruct struct {
+	Updated int `json:"updated"`
+}
+
 // GitRepoName is the git repository name
 var GitRepoName string
 
@@ -24,13 +28,12 @@ func GitAnnotate(args []string) error {
 		config.GetConfigValue("settings", "user")
 	}
 	url := fmt.Sprintf("%s/api/~%s/repos/%s/%s/annotate", config.GetURL("git"), config.UserName, GitRepoName, strings.TrimRight(string(ref), "\n"))
-	// TODO: correctly use json and print response in a sane way
-	var response string
+	var response annotateResponseStruct
 	annotations, err := ioutil.ReadFile(args[0])
 	err = FormRequest(url, "PUT", string(annotations), &response)
 	if err != nil {
 		return err
 	}
-	fmt.Println(response)
+	fmt.Printf("Added %d annotations.\n", response.Updated)
 	return nil
 }
