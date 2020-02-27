@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"time"
 
 	"git.xenrox.net/~xenrox/srhtctl/config"
@@ -53,6 +54,46 @@ func Request(url string, method string, body interface{}, response ...interface{
 	if err != nil {
 		return err
 	}
+	defer resp.Body.Close()
+	responseBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	if resp.StatusCode >= 400 {
+		var errorResponse apiErrorResponse
+		json.Unmarshal(responseBody, &errorResponse)
+		return errorResponse
+	}
+
+	if len(response) > 0 {
+		switch v := response[0].(type) {
+		case *string:
+			*v = string(responseBody)
+		default:
+			json.Unmarshal(responseBody, v)
+		}
+	}
+	return nil
+}
+
+// FormRequest does an API request with x-www-form-urlencoded
+func FormRequest(url string, method string, annotations string, response ...interface{}) error {
+	client := &http.Client{Timeout: 3 * time.Second}
+
+	req, err := http.NewRequest(method, url, strings.NewReader(annotations))
+	if err != nil {
+		return err
+	}
+	req.Header.Add("Content-Type", "x-www-form-urlencoded")
+	token := config.GetConfigValue("settings", "token")
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", fmt.Sprintf("token %s", token))
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+
 	defer resp.Body.Close()
 	responseBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
