@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"git.xenrox.net/~xenrox/srhtctl/config"
 	"github.com/spf13/cobra"
 )
 
@@ -24,4 +25,6 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize()
+
+	rootCmd.PersistentFlags().StringVar(&config.ConfigPath, "config", "", "Path to config.ini")
 }

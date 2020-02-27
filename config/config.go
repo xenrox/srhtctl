@@ -9,18 +9,27 @@ import (
 	"github.com/vaughan0/go-ini"
 )
 
+// ConfigPath is a path to a non default config.ini file
+var ConfigPath string
+
 var configFile *ini.File
 
 // LoadConfig parses the config.ini file and returns it.
 func LoadConfig() *ini.File {
-	xdgConfigHome, err := os.UserConfigDir()
-	if err != nil {
-		errorhelper.ExitError(err)
+	var configPath string
+	if ConfigPath == "" {
+
+		xdgConfigHome, err := os.UserConfigDir()
+		if err != nil {
+			errorhelper.ExitError(err)
+		}
+		configPath = fmt.Sprintf("%s/srhtctl/config.ini", xdgConfigHome)
+	} else {
+		configPath = ConfigPath
 	}
-	configPath := fmt.Sprintf("%s/srhtctl/config.ini", xdgConfigHome)
 	file, err := ini.LoadFile(configPath)
 	if err != nil {
-		errorhelper.PrintError(err)
+		errorhelper.ExitError(err)
 	}
 	return &file
 }
