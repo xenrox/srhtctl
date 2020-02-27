@@ -66,12 +66,22 @@ var BuildEdit bool
 
 // BuildResubmit resubmits a build ID
 func BuildResubmit(args []string) error {
-	var manifest string
+	var buildDeploy buildDeployStruct
+	var buildInfo buildStruct
 	url := fmt.Sprintf("%s/api/jobs/%s/manifest", config.GetURL("builds"), args[0])
-	err := Request(url, "GET", "", &manifest)
+	err := Request(url, "GET", "", &buildDeploy.Manifest)
 	if err != nil {
 		return err
 	}
+
+	err = buildGetStruct(args[0], &buildInfo)
+	if err != nil {
+		return err
+	}
+
+	BuildNote = fmt.Sprintf("Resubmission of build [#%s](/~xenrox/job/%s)", args[0], args[0])
+	BuildTags = helpers.TransformTags(*buildInfo.Tags)
+
 	if BuildEdit {
 		file, err := ioutil.TempFile(os.TempDir(), "srhtctl*.yml")
 		if err != nil {
@@ -79,7 +89,11 @@ func BuildResubmit(args []string) error {
 		}
 		fileName := file.Name()
 		defer os.Remove(fileName)
-		_, err = file.WriteString(manifest)
+		_, err = file.WriteString(fmt.Sprintf("# Set new build note here: %s\n", BuildNote))
+		if err != nil {
+			return err
+		}
+		_, err = file.WriteString(buildDeploy.Manifest)
 		if err != nil {
 			return err
 		}
@@ -95,20 +109,30 @@ func BuildResubmit(args []string) error {
 		if err != nil {
 			return err
 		}
+		lines := strings.Split(string(fileContent), "\n")
+		BuildNote = strings.Split(lines[0], ":")[1]
 		return buildDeployManifest(string(fileContent))
 	}
-	return buildDeployManifest(manifest)
+	return buildDeployManifest(buildDeploy.Manifest)
 }
 
 // BuildInformation gets information about a job by its ID
 func BuildInformation(args []string) error {
 	var response buildStruct
-	url := fmt.Sprintf("%s/api/jobs/%s", config.GetURL("builds"), args[0])
-	err := Request(url, "GET", "", &response)
+	err := buildGetStruct(args[0], &response)
 	if err != nil {
 		return err
 	}
 	return printBuildInformation(response)
+}
+
+func buildGetStruct(number string, response *buildStruct) error {
+	url := fmt.Sprintf("%s/api/jobs/%s", config.GetURL("builds"), number)
+	err := Request(url, "GET", "", &response)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func buildDeployManifest(manifest string) error {
