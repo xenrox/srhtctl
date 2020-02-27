@@ -10,9 +10,6 @@ import (
 	"git.xenrox.net/~xenrox/srhtctl/config"
 )
 
-// GitUserName is the git user name without ~
-var GitUserName string
-
 // GitRepoName is the git repository name
 var GitRepoName string
 
@@ -23,8 +20,10 @@ func GitAnnotate(args []string) error {
 	if err != nil {
 		return errors.New("Cannot correctly execute git command. Not in a valid repository?")
 	}
-	// TODO: make repo and username required flags (cobra)
-	url := fmt.Sprintf("%s/api/~%s/repos/%s/%s/annotate", config.GetURL("git"), GitUserName, GitRepoName, strings.TrimRight(string(ref), "\n"))
+	if config.UserName == "" {
+		config.GetConfigValue("settings", "user")
+	}
+	url := fmt.Sprintf("%s/api/~%s/repos/%s/%s/annotate", config.GetURL("git"), config.UserName, GitRepoName, strings.TrimRight(string(ref), "\n"))
 	// TODO: correctly use json and print response in a sane way
 	var response string
 	annotations, err := ioutil.ReadFile(args[0])

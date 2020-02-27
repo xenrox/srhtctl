@@ -12,6 +12,9 @@ import (
 // ConfigPath is a path to a non default config.ini file
 var ConfigPath string
 
+// UserName is the sr.ht user name without ~
+var UserName string
+
 var configFile *ini.File
 
 // LoadConfig parses the config.ini file and returns it.
