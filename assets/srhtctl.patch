@@ -1,19 +1,27 @@
 diff --unified --recursive --text srhtctl/usr/share/zsh/site-functions/_srhtctl srhtctl.new/usr/share/zsh/site-functions/_srhtctl
---- srhtctl/usr/share/zsh/site-functions/_srhtctl	2020-02-26 21:01:40.000000000 +0100
-+++ srhtctl.new/usr/share/zsh/site-functions/_srhtctl	2020-02-26 21:03:14.348616825 +0100
-@@ -66,6 +66,7 @@
- 
- function _srhtctl_build_deploy {
-   _arguments
-+    '_files'
+--- srhtctl/usr/share/zsh/site-functions/_srhtctl	2020-02-27 22:17:06.099935028 +0100
++++ srhtctl.new/usr/share/zsh/site-functions/_srhtctl	2020-02-27 22:21:37.039922415 +0100
+@@ -79,6 +79,7 @@
+     '(-n --note)'{-n,--note}'[Build description]:' \
+     '(*-t *--tags)'{\*-t,\*--tags}'[Comma seperated string of tags]:' \
+     '--config[Path to config.ini]:'
++  '_files'
  }
  
  function _srhtctl_build_info {
-@@ -122,6 +123,7 @@
-     '(-e --expiration)'{-e,--expiration}'[Paste expiration in days]:' \
+@@ -123,6 +124,7 @@
+     '(-r --repo)'{-r,--repo}'[Git repository name]:' \
+     '--config[Path to config.ini]:' \
+     '(-u --user)'{-u,--user}'[Git user (without ~)]:'
++  '_files'
+ }
+ 
+ function _srhtctl_help {
+@@ -179,6 +181,7 @@
      '(-n --name)'{-n,--name}'[Name for paste file]:' \
-     '(-v --visibility)'{-v,--visibility}'[Paste visibility]:'
-+    '_files'
+     '(-v --visibility)'{-v,--visibility}'[Paste visibility]:' \
+     '--config[Path to config.ini]:'
++  '_files'
  }
  
  function _srhtctl_paste_delete {
