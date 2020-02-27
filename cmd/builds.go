@@ -51,6 +51,8 @@ func init() {
 	rootCmd.AddCommand(buildCmd)
 
 	buildCmd.AddCommand(deployCmd)
+	deployCmd.PersistentFlags().StringVarP(&api.BuildNote, "note", "n", "", "Build description")
+	deployCmd.PersistentFlags().StringSliceVarP(&api.BuildTags, "tags", "t", nil, "Comma seperated string of tags")
 
 	buildCmd.AddCommand(resubmitCmd)
 	resubmitCmd.PersistentFlags().BoolVarP(&api.BuildEdit, "edit", "e", false, "Edit manifest")

@@ -14,9 +14,9 @@ import (
 )
 
 type buildDeployStruct struct {
-	Manifest string `json:"manifest"`
-	Note     string `json:"Note"`
-	// Tags     []string `json:"tags"`
+	Manifest string   `json:"manifest"`
+	Note     string   `json:"note"`
+	Tags     []string `json:"tags"`
 }
 
 type taskStruct struct {
@@ -25,19 +25,27 @@ type taskStruct struct {
 	Log    string `json:"log"`
 }
 
+// TODO: Why are tags as response a string and as request a list
+
 type buildStruct struct {
 	ID       int          `json:"id"`
 	Status   string       `json:"status"`
 	SetupLog string       `json:"setup_log"`
 	Tasks    []taskStruct `json:"tasks"`
-	Note     string       `json:"note"`
-	Tags     []string     `json:"tags"`
-	Runner   string       `json:"runner"`
+	Note     *string      `json:"note"`
+	Tags     *string      `json:"tags"`
+	Runner   *string      `json:"runner"`
 	Owner    struct {
 		CName string `json:"canonical_name"`
 		Name  string `json:"name"`
 	} `json:"owner"`
 }
+
+// BuildNote is a description of a build
+var BuildNote string
+
+// BuildTags are tags for a build
+var BuildTags []string
 
 // BuildDeploy deploys build manifests from command line
 func BuildDeploy(args []string) error {
@@ -106,9 +114,13 @@ func BuildInformation(args []string) error {
 func buildDeployManifest(manifest string) error {
 	url := fmt.Sprintf("%s/api/jobs", config.GetURL("builds"))
 	var body buildDeployStruct
-	// TODO: parse tags and notes too with flags
 	body.Manifest = manifest
-
+	body.Note = BuildNote
+	if len(BuildTags) > 0 {
+		body.Tags = BuildTags
+	} else {
+		body.Tags = make([]string, 0)
+	}
 	var response buildStruct
 	err := Request(url, "POST", body, &response)
 	if err != nil {
