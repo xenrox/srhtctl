@@ -7,8 +7,8 @@ sources:
 environment:
   GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
 secrets:
-  - 9b9e7b30-8dce-470c-9cad-0701fd958749 # ssh key
-  - 7059f6bc-d2f4-42b5-9a69-421ac0bcecd4 # config.ini
+  - 93429a9b-64d0-411a-8740-18ce3e6dc895 # ssh key
+  - 62aabe38-4da7-4233-b196-06a624758778 # config.ini
 triggers:
   - action: email
     condition: failure
