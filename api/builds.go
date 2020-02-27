@@ -1,7 +1,6 @@
 package api
 
 import (
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -42,9 +41,6 @@ type buildStruct struct {
 
 // BuildDeploy deploys build manifests from command line
 func BuildDeploy(args []string) error {
-	if len(args) == 0 {
-		return errors.New("Please append build manifests")
-	}
 	for _, file := range args {
 		manifest, err := ioutil.ReadFile(file)
 		if err != nil {
@@ -62,9 +58,6 @@ var BuildEdit bool
 
 // BuildResubmit resubmits a build ID
 func BuildResubmit(args []string) error {
-	if len(args) != 1 {
-		return errors.New("Please append one build ID")
-	}
 	var manifest string
 	url := fmt.Sprintf("%s/api/jobs/%s/manifest", config.GetURL("builds"), args[0])
 	err := Request(url, "GET", "", &manifest)
@@ -101,9 +94,6 @@ func BuildResubmit(args []string) error {
 
 // BuildInformation gets information about a job by its ID
 func BuildInformation(args []string) error {
-	if len(args) != 1 {
-		return errors.New("Please append one build ID")
-	}
 	var response buildStruct
 	url := fmt.Sprintf("%s/api/jobs/%s", config.GetURL("builds"), args[0])
 	err := Request(url, "GET", "", &response)

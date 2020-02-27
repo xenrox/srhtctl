@@ -1,7 +1,6 @@
 package api
 
 import (
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -123,9 +122,6 @@ func PasteCreate(args []string) error {
 
 // PasteDelete deletes multiple paste resources
 func PasteDelete(args []string) error {
-	if len(args) == 0 {
-		return errors.New("Please append paste SHA hashes")
-	}
 	for _, sha := range args {
 		err := pasteDeleteSHA(sha)
 		errorhelper.PrintError(err)

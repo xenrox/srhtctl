@@ -18,6 +18,7 @@ var createCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create a new paste resource",
 	Long:  "",
+	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		err := api.PasteCreate(args)
 		errorhelper.ExitError(err)

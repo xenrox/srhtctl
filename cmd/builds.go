@@ -16,8 +16,9 @@ var buildCmd = &cobra.Command{
 
 var deployCmd = &cobra.Command{
 	Use:   "deploy",
-	Short: "Deploy a build file",
+	Short: "Deploy build manifest(s)",
 	Long:  "",
+	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		err := api.BuildDeploy(args)
 		errorhelper.ExitError(err)
@@ -28,6 +29,7 @@ var resubmitCmd = &cobra.Command{
 	Use:   "resubmit",
 	Short: "Resubmit a build",
 	Long:  "",
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		err := api.BuildResubmit(args)
 		errorhelper.ExitError(err)
@@ -38,6 +40,7 @@ var infoCmd = &cobra.Command{
 	Use:   "info",
 	Short: "Get information about a job by its ID",
 	Long:  "",
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		err := api.BuildInformation(args)
 		errorhelper.ExitError(err)

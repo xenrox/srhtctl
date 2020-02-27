@@ -18,9 +18,6 @@ var GitRepoName string
 
 // GitAnnotate creates annotations
 func GitAnnotate(args []string) error {
-	if len(args) != 1 {
-		return errors.New("Please append an annotations file")
-	}
 	cmd := exec.Command("git", "rev-parse", "HEAD")
 	ref, err := cmd.Output()
 	if err != nil {

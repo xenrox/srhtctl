@@ -10,6 +10,7 @@ var gitCmd = &cobra.Command{
 	Use:   "git",
 	Short: "Use the srht git API",
 	Long:  "",
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 	},
 }
