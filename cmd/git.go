@@ -10,8 +10,6 @@ import (
 var gitCmd = &cobra.Command{
 	Use:   "git",
 	Short: "Use the srht git API",
-	Long:  "",
-	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 	},
 }
@@ -19,7 +17,9 @@ var gitCmd = &cobra.Command{
 var annotateCmd = &cobra.Command{
 	Use:   "annotate",
 	Short: "Create annotations",
-	Long:  "",
+	Long: `Create annotations.
+Takes one annotations.json as argument.`,
+	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		err := api.GitAnnotate(args)
 		errorhelper.ExitError(err)

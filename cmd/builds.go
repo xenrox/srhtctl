@@ -9,7 +9,6 @@ import (
 var buildCmd = &cobra.Command{
 	Use:   "build",
 	Short: "Use the srht build API",
-	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
 	},
 }
@@ -17,8 +16,9 @@ var buildCmd = &cobra.Command{
 var deployCmd = &cobra.Command{
 	Use:   "deploy",
 	Short: "Deploy build manifest(s)",
-	Long:  "",
-	Args:  cobra.MinimumNArgs(1),
+	Long: `Deploy build manifest(s)
+Takes yml manifests as arguments.`,
+	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		err := api.BuildDeploy(args)
 		errorhelper.ExitError(err)
@@ -28,8 +28,9 @@ var deployCmd = &cobra.Command{
 var resubmitCmd = &cobra.Command{
 	Use:   "resubmit",
 	Short: "Resubmit a build",
-	Long:  "",
-	Args:  cobra.ExactArgs(1),
+	Long: `Resubmit a build.
+Takes one job ID as argument.`,
+	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		err := api.BuildResubmit(args)
 		errorhelper.ExitError(err)
@@ -39,8 +40,9 @@ var resubmitCmd = &cobra.Command{
 var infoCmd = &cobra.Command{
 	Use:   "info",
 	Short: "Get information about a job by its ID",
-	Long:  "",
-	Args:  cobra.ExactArgs(1),
+	Long: `Get information about a job by its ID.
+Takes one job ID as argument.`,
+	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		err := api.BuildInformation(args)
 		errorhelper.ExitError(err)
@@ -51,7 +53,7 @@ func init() {
 	rootCmd.AddCommand(buildCmd)
 
 	buildCmd.AddCommand(deployCmd)
-	deployCmd.PersistentFlags().StringVarP(&api.BuildNote, "note", "n", "", "Build description")
+	deployCmd.PersistentFlags().StringVarP(&api.BuildNote, "note", "n", "", "Build note")
 	deployCmd.PersistentFlags().StringSliceVarP(&api.BuildTags, "tags", "t", nil, "Comma seperated string of tags")
 
 	buildCmd.AddCommand(resubmitCmd)

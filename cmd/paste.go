@@ -9,7 +9,6 @@ import (
 var pasteCmd = &cobra.Command{
 	Use:   "paste",
 	Short: "Use the srht paste API",
-	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
 	},
 }
@@ -17,8 +16,9 @@ var pasteCmd = &cobra.Command{
 var createCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create a new paste resource",
-	Long:  "",
-	Args:  cobra.MinimumNArgs(1),
+	Long: `Create a new paste resource.
+Takes files as arguments.`,
+	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		err := api.PasteCreate(args)
 		errorhelper.ExitError(err)
@@ -28,7 +28,9 @@ var createCmd = &cobra.Command{
 var deleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "Delete a paste resource",
-	Long:  "",
+	Long: `Delete a paste resource.
+Takes paste SHA hashes as arguments`,
+	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		err := api.PasteDelete(args)
 		errorhelper.ExitError(err)
@@ -38,7 +40,6 @@ var deleteCmd = &cobra.Command{
 var cleanupCmd = &cobra.Command{
 	Use:   "cleanup",
 	Short: "Delete expired paste resources",
-	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
 		err := api.PasteCleanup()
 		errorhelper.ExitError(err)
@@ -49,7 +50,7 @@ func init() {
 	rootCmd.AddCommand(pasteCmd)
 
 	pasteCmd.AddCommand(createCmd)
-	createCmd.PersistentFlags().StringVarP(&api.PasteName, "name", "n", "unnamed", "Name for paste file")
+	createCmd.PersistentFlags().StringVarP(&api.PasteName, "name", "n", "unnamed", "Paste name")
 	createCmd.PersistentFlags().StringVarP(&api.PasteVisibility, "visibility", "v", "", "Paste visibility")
 	createCmd.PersistentFlags().StringVarP(&api.PasteExpiration, "expiration", "e", "", "Paste expiration in days")
 

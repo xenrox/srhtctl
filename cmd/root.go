@@ -11,8 +11,8 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "srhtctl",
 	Short: "CLI for using the sourcehut API",
-	Long: `Services:
-	paste:`,
+	Long: `srhtctl is a CLI for using the sourcehut API.
+The project is hosted at https://git.xenrox.net/~xenrox/srhtctl`,
 }
 
 // Execute is the entrypoint for the main fucntion.
