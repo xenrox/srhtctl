@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"git.xenrox.net/~xenrox/srhtctl/config"
+	"git.xenrox.net/~xenrox/srhtctl/helpers"
 	"git.xenrox.net/~xenrox/srhtctl/helpers/errorhelper"
 	"github.com/atotto/clipboard"
 )
@@ -77,11 +78,14 @@ func PasteCreate(args []string) error {
 	}
 
 	var visibility string
-	// TODO: check for illegal values
 	if PasteVisibility != "" {
 		visibility = PasteVisibility
 	} else {
 		visibility = config.GetConfigValue("paste", "visibility", "unlisted")
+	}
+	err := helpers.ValidateVisibility(visibility)
+	if err != nil {
+		return err
 	}
 
 	url := fmt.Sprintf("%s/api/pastes", config.GetURL("paste"))
@@ -89,7 +93,7 @@ func PasteCreate(args []string) error {
 	body.Visibility = visibility
 
 	var response pasteStruct
-	err := Request(url, "POST", body, &response)
+	err = Request(url, "POST", body, &response)
 	if err != nil {
 		return err
 	}
