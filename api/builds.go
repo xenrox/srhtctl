@@ -108,7 +108,7 @@ func BuildResubmit(args []string) error {
 			return err
 		}
 		lines := strings.Split(string(fileContent), "\n")
-		BuildNote = strings.Split(lines[0], ":")[1]
+		BuildNote = strings.SplitN(lines[0], ":", 2)[1]
 		return buildDeployManifest(string(fileContent))
 	}
 	return buildDeployManifest(buildDeploy.Manifest)
