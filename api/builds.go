@@ -25,8 +25,6 @@ type taskStruct struct {
 	Log    string `json:"log"`
 }
 
-// TODO: Why are tags as response a string and as request a list
-
 type buildStruct struct {
 	ID       int          `json:"id"`
 	Status   string       `json:"status"`
@@ -123,7 +121,7 @@ func BuildInformation(args []string) error {
 	if err != nil {
 		return err
 	}
-	return printBuildInformation(response)
+	return response.printBuildInformation()
 }
 
 func buildGetStruct(number string, response *buildStruct) error {
@@ -154,7 +152,7 @@ func buildDeployManifest(manifest string) error {
 	return nil
 }
 
-func printBuildInformation(information buildStruct) error {
+func (information buildStruct) printBuildInformation() error {
 	fmt.Printf("Build %d: %s\n", information.ID, formatBuildStatus(information.Status))
 	for _, task := range information.Tasks {
 		fmt.Printf("\tTask %s: %s\n", task.Name, formatBuildStatus(task.Status))
