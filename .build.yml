@@ -27,4 +27,4 @@ tasks:
   - github: |
       cd srhtctl
       git remote add github git@github.com:xenrox/srhtctl.git
-      git push github master --follow-tags
+      git push github --all --follow-tags
