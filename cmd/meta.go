@@ -23,9 +23,20 @@ var profileCmd = &cobra.Command{
 	},
 }
 
+var logCmd = &cobra.Command{
+	Use:   "logs",
+	Short: "Get audit logs",
+	Run: func(cmd *cobra.Command, args []string) {
+		err := api.MetaGetLogs()
+		errorhelper.ExitError((err))
+	},
+}
+
 func init() {
 	rootCmd.AddCommand(metaCmd)
 
 	metaCmd.AddCommand(profileCmd)
 	profileCmd.PersistentFlags().BoolVarP(&api.MetaEdit, "edit", "e", false, "Edit profile information")
+
+	metaCmd.AddCommand(logCmd)
 }
