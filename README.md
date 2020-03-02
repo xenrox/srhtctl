@@ -1,6 +1,7 @@
 # srhtctl
 
 [![builds.sr.ht status](https://builds.xenrox.net/~xenrox/srhtctl.svg)](https://builds.xenrox.net/~xenrox/srhtctl?)
+[Documentation](https://man.xenrox.net/~xenrox/srhtctl/)
 
 srhtctl is a CLI for interacting with the sourcehut API.
 
@@ -17,9 +18,9 @@ There is an [aur package](https://aur.archlinux.org/packages/srhtctl/) for Arch 
 You have to create a `config.ini` in your `XDG_CONFIG_HOME` under the srhtctl folder.
 On Darwin, your configuration directory is `~/Library/Application Support/srhtctl`.
 The only necessary value is your sourcehut authentication token.
-By default you will interact with https://meta.sr.ht/.
+By default you will interact with the original sourcehut instance at https://sr.ht/.
 
-Currently implemented are parts of the git, paste and builds api.
+Currently implemented are parts of the meta, git, paste and builds api.
 You can for example create pastes or deploy build manifests from your command line.
 As extra features you can create pastes with expiration times and edit build files on the fly with your favourite `$EDITOR`.
 
