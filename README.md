@@ -14,7 +14,9 @@ There is an [aur package](https://aur.archlinux.org/packages/srhtctl/) for Arch 
 
 ## Usage
 
-You have to create a `config.ini` in your `XDG_CONFIG_HOME` under the srhtctl folder. The only necessary value is your sourcehut authentication token.
+You have to create a `config.ini` in your `XDG_CONFIG_HOME` under the srhtctl folder.
+On Darwin, your configuration directory is `~/Library/Application Support/srhtctl`.
+The only necessary value is your sourcehut authentication token.
 By default you will interact with https://meta.sr.ht/.
 
 Currently implemented are parts of the git, paste and builds api.
