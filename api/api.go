@@ -35,6 +35,12 @@ type apiError struct {
 	Field  string `json:"field"`
 }
 
+type pagination struct {
+	Next           *int `json:"next"`
+	ResultsPerPage int  `json:"results_per_page"`
+	Total          int  `json:"total"`
+}
+
 func (e apiErrorResponse) Error() string {
 	err := "Error respose from the API:"
 	for _, errors := range e.Errors {
