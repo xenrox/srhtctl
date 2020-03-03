@@ -38,5 +38,3 @@ You can send patches to `Thorben Günther <echo YWRtaW5AeGVucm94Lm5ldAo= | base6
 
 When using the zsh completion, you should apply the patch under `assets` so that files will be shown where appropriate.
 There is a systemd service example in `assets` for cleaning up your expired pastes.
-
-TODO: Add checklist with implemented features.

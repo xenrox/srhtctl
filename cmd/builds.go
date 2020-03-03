@@ -6,8 +6,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var buildCmd = &cobra.Command{
-	Use:   "build",
+var buildsCmd = &cobra.Command{
+	Use:   "builds",
 	Short: "Use the srht build API",
 	Run: func(cmd *cobra.Command, args []string) {
 	},
@@ -50,14 +50,14 @@ Takes one job ID as argument.`,
 }
 
 func init() {
-	rootCmd.AddCommand(buildCmd)
+	rootCmd.AddCommand(buildsCmd)
 
-	buildCmd.AddCommand(deployCmd)
+	buildsCmd.AddCommand(deployCmd)
 	deployCmd.PersistentFlags().StringVarP(&api.BuildNote, "note", "n", "", "Build note")
 	deployCmd.PersistentFlags().StringSliceVarP(&api.BuildTags, "tags", "t", nil, "Comma seperated string of tags")
 
-	buildCmd.AddCommand(resubmitCmd)
+	buildsCmd.AddCommand(resubmitCmd)
 	resubmitCmd.PersistentFlags().BoolVarP(&api.BuildEdit, "edit", "e", false, "Edit manifest")
 
-	buildCmd.AddCommand(infoCmd)
+	buildsCmd.AddCommand(infoCmd)
 }
