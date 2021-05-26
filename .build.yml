@@ -1,14 +1,8 @@
 image: archlinux
 packages:
-  - go-pie
-  - annotatego-git
+  - go
 sources:
   - https://git.xenrox.net/~xenrox/srhtctl
-environment:
-  GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
-secrets:
-  - 93429a9b-64d0-411a-8740-18ce3e6dc895 # ssh key
-  - 62aabe38-4da7-4233-b196-06a624758778 # config.ini
 triggers:
   - action: email
     condition: failure
@@ -16,15 +10,4 @@ triggers:
 tasks:
   - build: |
       cd srhtctl
-      make
-  - run: |
-      cd srhtctl
-      ./srhtctl completionZSH > /dev/null
-  - annotate: |
-      cd srhtctl
-      annotatego -v git.xenrox.net/~xenrox/srhtctl... > annotations.json
-      ./srhtctl git annotate --user xenrox --repo srhtctl annotations.json
-  - github: |
-      cd srhtctl
-      git remote add github git@github.com:xenrox/srhtctl.git
-      git push github --all --follow-tags
+      go test -v ./...
