@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -157,47 +158,83 @@ func (information buildStruct) printBuildInformation() error {
 	for _, task := range information.Tasks {
 		fmt.Printf("\tTask %s: %s\n", task.Name, formatBuildStatus(task.Status))
 	}
+
+	if information.Status == "running" {
+		log, err := retrieveBuildLog(information.SetupLog)
+
+		if err != nil {
+			return err
+		}
+		printSSHCommand(log)
+	}
+
 	if information.Status == "failed" {
 		debugLines := config.GetConfigValue("builds", "debugLines", "0")
+
+		setupLog, err := retrieveBuildLog(information.SetupLog)
+		if err != nil {
+			return err
+		}
+
 		if debugLines != "0" {
 			length, err := strconv.Atoi(debugLines)
 			if err != nil {
 				return err
 			}
 			fmt.Printf("\n\n\033[4mBuild setup failed with:\033[0m\n\n")
-			err = printBuildErrors(information.SetupLog, length)
-			if err != nil {
-				return err
-			}
+			printBuildErrors(setupLog, length)
 			for _, task := range information.Tasks {
 				if task.Status == "failed" {
 					fmt.Printf("\n\033[4mTask %s failed with:\033[0m\n\n", task.Name)
-					err = printBuildErrors(task.Log, length)
+					taskLog, err := retrieveBuildLog(task.Log)
 					if err != nil {
 						return err
 					}
+
+					printBuildErrors(taskLog, length)
 				}
 			}
 		}
+		log, err := retrieveBuildLog(information.SetupLog)
+
+		if err != nil {
+			return err
+		}
+		printSSHCommand(log)
 	}
 	return nil
 }
 
-func printBuildErrors(url string, length int) error {
+// printSSHCommand searches for the SSH connection command in str and prints it
+func printSSHCommand(str string) {
+	var sshRegex = regexp.MustCompile("ssh -t .* [0-9]*")
+	sshCommand := sshRegex.FindString(str)
+	if sshCommand != "" {
+		fmt.Print("\nSSH login command: ")
+		fmt.Printf("\033[96m%s\033[0m\n", sshCommand)
+	}
+}
+
+// retrieveBuildLog gets the log file for a build task und returns it as a string
+func retrieveBuildLog(url string) (string, error) {
 	resp, err := http.Get(url)
 	if err != nil {
-		return err
+		return "", err
 	}
 	defer resp.Body.Close()
 	responseBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return err
+		return "", err
 	}
-	lines := strings.Split(string(responseBody), "\n")
+
+	return string(responseBody), nil
+}
+
+func printBuildErrors(log string, length int) {
+	lines := strings.Split(log, "\n")
 	for _, line := range lines[helpers.Max(len(lines)-length, 0):] {
 		fmt.Println(line)
 	}
-	return nil
 }
 
 func formatBuildStatus(status string) string {
