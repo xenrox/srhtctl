@@ -7,8 +7,9 @@ import (
 )
 
 var buildsCmd = &cobra.Command{
-	Use:   "builds",
-	Short: "Use the srht build API",
+	Use:     "builds",
+	Short:   "Use the srht build API",
+	Aliases: []string{"build"},
 	Run: func(cmd *cobra.Command, args []string) {
 	},
 }
