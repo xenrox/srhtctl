@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"errors"
+	"io/ioutil"
 	"os"
 	"os/exec"
 
@@ -27,4 +28,14 @@ func EditFile(fileName string) error {
 	cmd.Stderr = os.Stderr
 
 	return cmd.Run()
+}
+
+// CreateFile creates a temporary file with the name bases on a glob
+func CreateFile(glob string) (*os.File, string, error) {
+	file, err := ioutil.TempFile(os.TempDir(), glob)
+	if err != nil {
+		return nil, "", err
+	}
+
+	return file, file.Name(), nil
 }

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -82,12 +81,10 @@ func BuildResubmit(args []string) error {
 	BuildTags = helpers.TransformTags(buildInfo.Tags)
 
 	if BuildEdit {
-		file, err := ioutil.TempFile(os.TempDir(), "srhtctl*.yml")
+		file, fileName, err := helpers.CreateFile("srhtctl*.yml")
 		if err != nil {
 			return err
 		}
-		fileName := file.Name()
-		defer os.Remove(fileName)
 		_, err = file.WriteString(fmt.Sprintf("# Set new build note here: %s\n", BuildNote))
 		if err != nil {
 			return err
