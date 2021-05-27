@@ -77,8 +77,8 @@ func BuildResubmit(args []string) error {
 		return err
 	}
 
-	BuildNote = fmt.Sprintf("Resubmission of build [#%s](/~xenrox/job/%s)", args[0], args[0])
-	BuildTags = helpers.TransformTags(*buildInfo.Tags)
+	BuildNote = fmt.Sprintf("Resubmission of build [#%s](/%s/job/%s)", args[0], buildInfo.Owner.CName, args[0])
+	BuildTags = helpers.TransformTags(buildInfo.Tags)
 
 	if BuildEdit {
 		file, err := ioutil.TempFile(os.TempDir(), "srhtctl*.yml")

@@ -17,9 +17,9 @@ func ValidateVisibility(visibility string) error {
 }
 
 // TransformTags formats a tag string as an array
-func TransformTags(tagString string) []string {
-	if tagString == "" {
+func TransformTags(tagString *string) []string {
+	if tagString == nil {
 		return make([]string, 0)
 	}
-	return strings.Split(tagString, "/")
+	return strings.Split(*tagString, "/")
 }
