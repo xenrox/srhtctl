@@ -31,10 +31,11 @@ The wiki is based on the `wiki` branch of this repository.
 
 ## Contributing
 
-You can send patches to `Thorben Günther <echo YWRtaW5AeGVucm94Lm5ldAo= | base64 -d>`
-(preferred) or use pull requests with the [github mirror](https://github.com/xenrox/srhtctl).
+You can send patches to the [mailing list] and report bugs via email on the [tracker].
 
 ## Comments
 
-When using the zsh completion, you should apply the patch under `assets` so that files will be shown where appropriate.
 There is a systemd service example in `assets` for cleaning up your expired pastes.
+
+[mailing list]: https://lists.xenrox.net/~xenrox/public-inbox
+[tracker]: https://todo.xenrox.net/~xenrox/srhtctl
