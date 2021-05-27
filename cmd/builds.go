@@ -18,7 +18,8 @@ var deployCmd = &cobra.Command{
 	Short: "Deploy build manifest(s)",
 	Long: `Deploy build manifest(s)
 Takes yml manifests as arguments.`,
-	Args: cobra.MinimumNArgs(1),
+	Args:              cobra.MinimumNArgs(1),
+	ValidArgsFunction: completeYamlFiles,
 	Run: func(cmd *cobra.Command, args []string) {
 		err := api.BuildDeploy(args)
 		errorhelper.ExitError(err)

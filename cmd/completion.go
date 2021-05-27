@@ -28,3 +28,7 @@ func init() {
 	rootCmd.AddCommand(completionZSHCmd)
 	rootCmd.AddCommand(completionBASHCmd)
 }
+
+func completeYamlFiles(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	return []string{"yaml", "yml"}, cobra.ShellCompDirectiveFilterFileExt
+}
