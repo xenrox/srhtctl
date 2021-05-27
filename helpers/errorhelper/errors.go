@@ -1,6 +1,7 @@
 package errorhelper
 
 import (
+	"errors"
 	"fmt"
 	"os"
 )
@@ -13,9 +14,19 @@ func PrintError(err error) {
 }
 
 // ExitError calls PrintError and exits the program with error code
+// Parameter: error
 func ExitError(err error) {
 	if err != nil {
 		PrintError(err)
+		os.Exit(1)
+	}
+}
+
+// ExitString calls PrintError and exits the program with error code
+// Parameter: string
+func ExitString(err string) {
+	if err != "" {
+		PrintError(errors.New(err))
 		os.Exit(1)
 	}
 }
