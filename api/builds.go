@@ -212,6 +212,8 @@ func printSSHCommand(str string) {
 	if sshCommand != "" {
 		fmt.Print("\nSSH login command: ")
 		fmt.Printf("\033[96m%s\033[0m\n", sshCommand)
+
+		helpers.CopyToClipboard(sshCommand)
 	}
 }
 
