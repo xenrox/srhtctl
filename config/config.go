@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"strings"
 
 	"git.xenrox.net/~xenrox/srhtctl/helpers/errorhelper"
@@ -67,4 +68,21 @@ func GetURL(service string) string {
 		return url
 	}
 	return fmt.Sprintf("https://%s", url)
+}
+
+// GetToken returns the sourcehut API token
+func GetToken() string {
+	token := GetConfigValue("settings", "token", "")
+	if token == "" {
+		tokenCmd := GetConfigValue("settings", "tokenCmd", "")
+		cmd := exec.Command("sh", "-c", tokenCmd)
+		cmd.Stdin = os.Stdin
+		output, err := cmd.Output()
+		if err != nil {
+			errorhelper.ExitString("Could not parse tokenCmd")
+		}
+		token = strings.TrimSpace(string(output))
+	}
+
+	return token
 }

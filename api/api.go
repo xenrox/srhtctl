@@ -66,7 +66,7 @@ func Request(url string, method string, body interface{}, response ...interface{
 	if err != nil {
 		return err
 	}
-	token := config.GetConfigValue("settings", "token")
+	token := config.GetToken()
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Authorization", fmt.Sprintf("token %s", token))
 	resp, err := client.Do(req)
