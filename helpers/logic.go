@@ -3,6 +3,9 @@ package helpers
 import (
 	"errors"
 	"strings"
+
+	"git.xenrox.net/~xenrox/srhtctl/config"
+	"github.com/atotto/clipboard"
 )
 
 // ValidateVisibility checks whether the visibility value is valid
@@ -22,4 +25,11 @@ func TransformTags(tagString *string) []string {
 		return make([]string, 0)
 	}
 	return strings.Split(*tagString, "/")
+}
+
+// CopyToClipboard copys text to clipboard if set by user
+func CopyToClipboard(text string) {
+	if config.GetConfigValue("settings", "copyToClipboard", "false") == "true" {
+		clipboard.WriteAll(text)
+	}
 }

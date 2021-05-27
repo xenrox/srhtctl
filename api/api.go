@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"git.xenrox.net/~xenrox/srhtctl/config"
-	"github.com/atotto/clipboard"
+	"git.xenrox.net/~xenrox/srhtctl/helpers"
 )
 
 type shortUserStruct struct {
@@ -141,8 +141,8 @@ func HandleResponse(response string, copy bool) {
 	if response == "" {
 		return
 	}
-	if config.GetConfigValue("settings", "copyToClipboard", "false") == "true" && copy {
-		clipboard.WriteAll(response)
+	if copy {
+		helpers.CopyToClipboard(response)
 	}
 	fmt.Println(response)
 }
