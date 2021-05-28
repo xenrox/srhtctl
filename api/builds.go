@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -116,7 +117,9 @@ func BuildInformation(args []string) error {
 	if err != nil {
 		return err
 	}
-	return response.printBuildInformation()
+
+	fmt.Println(response)
+	return nil
 }
 
 func buildGetStruct(number string, response *buildStruct) error {
@@ -147,68 +150,82 @@ func buildDeployManifest(manifest string) error {
 	return nil
 }
 
-func (information buildStruct) printBuildInformation() error {
-	fmt.Printf("Build %d: %s\n", information.ID, formatBuildStatus(information.Status))
-	for _, task := range information.Tasks {
-		fmt.Printf("\tTask %s: %s\n", task.Name, formatBuildStatus(task.Status))
+func (task taskStruct) String() string {
+	str := fmt.Sprintf("Task %s: %s\n", task.Name, formatBuildStatus(task.Status))
+
+	return str
+}
+
+func (build buildStruct) String() string {
+	str := fmt.Sprintf("Build %d: %s\n", build.ID, formatBuildStatus(build.Status))
+	for _, task := range build.Tasks {
+		str += fmt.Sprintf("\t%s", task)
 	}
 
-	if information.Status == "running" {
-		log, err := retrieveBuildLog(information.SetupLog)
-
+	if build.Status == "running" {
+		log, err := retrieveBuildLog(build.SetupLog)
 		if err != nil {
-			return err
+			fmt.Fprintln(os.Stderr, "Could not retrieve logs")
+			return str
 		}
-		printSSHCommand(log)
+
+		sshCommand := getSSHCommand(log)
+
+		if sshCommand != "" {
+			str = str + "\n" + sshCommand
+		}
 	}
 
-	if information.Status == "failed" {
+	if build.Status == "failed" {
 		debugLines := config.GetConfigValue("builds", "debugLines", "0")
 
-		setupLog, err := retrieveBuildLog(information.SetupLog)
+		setupLog, err := retrieveBuildLog(build.SetupLog)
 		if err != nil {
-			return err
+			fmt.Fprintln(os.Stderr, "Could not retrieve logs")
+			return str
 		}
 
 		if debugLines != "0" {
 			length, err := strconv.Atoi(debugLines)
 			if err != nil {
-				return err
+				fmt.Fprintln(os.Stderr, "Config: debugLines is no valid integer")
+				return str
 			}
-			fmt.Printf("\n\n\033[4mBuild setup failed with:\033[0m\n\n")
-			printBuildErrors(setupLog, length)
-			for _, task := range information.Tasks {
+
+			str += fmt.Sprintf("\n\n\033[4mBuild setup failed with:\033[0m\n\n")
+			str += getBuildErrors(setupLog, length)
+			for _, task := range build.Tasks {
 				if task.Status == "failed" {
-					fmt.Printf("\n\033[4mTask %s failed with:\033[0m\n\n", task.Name)
+					str += fmt.Sprintf("\n\033[4mTask %s failed with:\033[0m\n\n", task.Name)
 					taskLog, err := retrieveBuildLog(task.Log)
 					if err != nil {
-						return err
+						fmt.Fprintln(os.Stderr, "Could no retrieve logs")
+						return str
 					}
 
-					printBuildErrors(taskLog, length)
+					str += getBuildErrors(taskLog, length)
 				}
 			}
 		}
-		log, err := retrieveBuildLog(information.SetupLog)
 
-		if err != nil {
-			return err
-		}
-		printSSHCommand(log)
+		str += getSSHCommand(setupLog)
 	}
-	return nil
+
+	return str
 }
 
-// printSSHCommand searches for the SSH connection command in str and prints it
-func printSSHCommand(str string) {
+// getSSHCommand searches for the SSH connection command in log and returns it
+func getSSHCommand(log string) string {
 	var sshRegex = regexp.MustCompile("ssh -t .* [0-9]*")
-	sshCommand := sshRegex.FindString(str)
-	if sshCommand != "" {
-		fmt.Print("\nSSH login command: ")
-		fmt.Printf("\033[96m%s\033[0m\n", sshCommand)
+	var str string
 
+	sshCommand := sshRegex.FindString(log)
+	if sshCommand != "" {
 		helpers.CopyToClipboard(sshCommand)
+
+		str = fmt.Sprintf("SSH login command: \033[96m%s\033[0m\n", sshCommand)
 	}
+	return str
 }
 
 // retrieveBuildLog gets the log file for a build task und returns it as a string
@@ -226,11 +243,15 @@ func retrieveBuildLog(url string) (string, error) {
 	return string(responseBody), nil
 }
 
-func printBuildErrors(log string, length int) {
+func getBuildErrors(log string, length int) string {
+	var str string
+
 	lines := strings.Split(log, "\n")
 	for _, line := range lines[helpers.Max(len(lines)-length, 0):] {
-		fmt.Println(line)
+		str += fmt.Sprintln(line)
 	}
+
+	return str
 }
 
 func formatBuildStatus(status string) string {
