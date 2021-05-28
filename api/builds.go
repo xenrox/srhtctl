@@ -221,9 +221,8 @@ func getSSHCommand(log string) string {
 
 	sshCommand := sshRegex.FindString(log)
 	if sshCommand != "" {
-		helpers.CopyToClipboard(sshCommand)
-
-		str = fmt.Sprintf("SSH login command: \033[96m%s\033[0m\n", sshCommand)
+		str = fmt.Sprintf("SSH login command: \033[96m%s\033[0m", sshCommand)
+		str += helpers.CopyToClipboard(sshCommand)
 	}
 	return str
 }

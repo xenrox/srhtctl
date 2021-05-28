@@ -28,8 +28,11 @@ func TransformTags(tagString *string) []string {
 }
 
 // CopyToClipboard copys text to clipboard if set by user
-func CopyToClipboard(text string) {
+func CopyToClipboard(text string) string {
 	if config.GetConfigValue("settings", "copyToClipboard", "false") == "true" {
 		clipboard.WriteAll(text)
+		return " (Copied to clipboard)"
 	}
+
+	return ""
 }
