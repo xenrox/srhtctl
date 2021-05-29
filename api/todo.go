@@ -8,20 +8,12 @@ type permissionStruct struct {
 
 type trackerStruct struct {
 	ID                 int              `json:"id"`
-	Owner              shortUserStruct  `json:"owner"`
+	Owner              userStruct       `json:"owner"`
 	Created            string           `json:"created"`
 	Updated            string           `json:"updated"`
 	Name               string           `json:"name"`
 	Description        string           `json:"description"`
 	DefaultPermissions permissionStruct `json:"default_permissions"`
-}
-
-type shortTrackerStruct struct {
-	ID      int             `json:"id"`
-	Owner   shortUserStruct `json:"owner"`
-	Created string          `json:"created"`
-	Updated string          `json:"updated"`
-	Name    string          `json:"name"`
 }
 
 type trackerPagerStruct struct {
@@ -32,19 +24,19 @@ type trackerPagerStruct struct {
 }
 
 type ticketStruct struct {
-	ID          int                `json:"id"`
-	Ref         string             `json:"ref"`
-	Tracker     shortTrackerStruct `json:"tracker"`
-	Title       string             `json:"title"`
-	Created     string             `json:"created"`
-	Updated     string             `json:"updated"`
-	Submitter   shortUserStruct    `json:"submitter"`
-	Description string             `json:"description"`
-	Status      string             `json:"status"`
-	Resolution  string             `json:"resolution"`
-	Permissions permissionStruct   `json:"permissions"`
-	Labels      []string           `json:"labels"`
-	Assignees   []string           `json:"assignees"`
+	ID          int              `json:"id"`
+	Ref         string           `json:"ref"`
+	Tracker     trackerStruct    `json:"tracker"`
+	Title       string           `json:"title"`
+	Created     string           `json:"created"`
+	Updated     string           `json:"updated"`
+	Submitter   userStruct       `json:"submitter"`
+	Description string           `json:"description"`
+	Status      string           `json:"status"`
+	Resolution  string           `json:"resolution"`
+	Permissions permissionStruct `json:"permissions"`
+	Labels      []string         `json:"labels"`
+	Assignees   []string         `json:"assignees"`
 }
 
 type ticketPagerStruct struct {
