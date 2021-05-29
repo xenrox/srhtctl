@@ -51,7 +51,11 @@ func init() {
 	pasteCmd.AddCommand(createCmd)
 	createCmd.PersistentFlags().StringVarP(&api.PasteName, "name", "n", "unnamed", "Paste name")
 	createCmd.PersistentFlags().StringVarP(&api.PasteVisibility, "visibility", "v", "", "Paste visibility")
+	createCmd.RegisterFlagCompletionFunc("visibility", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return []string{"public", "private", "unlisted"}, cobra.ShellCompDirectiveNoFileComp
+	})
 	createCmd.PersistentFlags().StringVarP(&api.PasteExpiration, "expiration", "e", "", "Paste expiration in days")
+	createCmd.RegisterFlagCompletionFunc("expiration", completeNoFiles)
 
 	pasteCmd.AddCommand(deleteCmd)
 
