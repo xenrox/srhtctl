@@ -31,7 +31,7 @@ type buildStruct struct {
 	Status   string          `json:"status"`
 	SetupLog string          `json:"setup_log"`
 	Tasks    []taskStruct    `json:"tasks"`
-	Note     *string         `json:"note"`
+	Note     string          `json:"note"`
 	Tags     *string         `json:"tags"`
 	Runner   *string         `json:"runner"`
 	Owner    shortUserStruct `json:"owner"`
