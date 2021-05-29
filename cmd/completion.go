@@ -32,3 +32,7 @@ func init() {
 func completeYamlFiles(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 	return []string{"yaml", "yml"}, cobra.ShellCompDirectiveFilterFileExt
 }
+
+func completeNoFiles(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	return nil, cobra.ShellCompDirectiveNoFileComp
+}
