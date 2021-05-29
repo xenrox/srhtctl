@@ -32,7 +32,8 @@ var resubmitCmd = &cobra.Command{
 	Short: "Resubmit a build",
 	Long: `Resubmit a build.
 Takes one job ID as argument.`,
-	Args: cobra.ExactArgs(1),
+	Args:              cobra.ExactArgs(1),
+	ValidArgsFunction: completeNoFiles,
 	Run: func(cmd *cobra.Command, args []string) {
 		err := api.BuildResubmit(args)
 		errorhelper.ExitError(err)
@@ -44,7 +45,8 @@ var infoCmd = &cobra.Command{
 	Short: "Get information about a job by its ID",
 	Long: `Get information about a job by its ID.
 Takes one job ID as argument.`,
-	Args: cobra.ExactArgs(1),
+	Args:              cobra.ExactArgs(1),
+	ValidArgsFunction: completeNoFiles,
 	Run: func(cmd *cobra.Command, args []string) {
 		err := api.BuildInformation(args)
 		errorhelper.ExitError(err)
@@ -56,7 +58,9 @@ func init() {
 
 	buildsCmd.AddCommand(deployCmd)
 	deployCmd.PersistentFlags().StringVarP(&api.BuildNote, "note", "n", "", "Build note")
+	deployCmd.RegisterFlagCompletionFunc("note", completeNoFiles)
 	deployCmd.PersistentFlags().StringSliceVarP(&api.BuildTags, "tags", "t", nil, "Comma seperated string of tags")
+	deployCmd.RegisterFlagCompletionFunc("tags", completeNoFiles)
 
 	buildsCmd.AddCommand(resubmitCmd)
 	resubmitCmd.PersistentFlags().BoolVarP(&api.BuildEdit, "edit", "e", false, "Edit manifest")
