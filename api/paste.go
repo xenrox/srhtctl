@@ -16,10 +16,10 @@ import (
 )
 
 type pasteStruct struct {
-	Created    string          `json:"created"`
-	Visibility string          `json:"visibilty"`
-	SHA        string          `json:"sha"`
-	User       shortUserStruct `json:"user"`
+	Created    string     `json:"created"`
+	Visibility string     `json:"visibilty"`
+	SHA        string     `json:"sha"`
+	User       userStruct `json:"user"`
 	Files      []struct {
 		Filename string `json:"filename"`
 		BlobID   string `json:"blob_id"`

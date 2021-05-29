@@ -26,22 +26,22 @@ type metaAuditPagination struct {
 }
 
 type sshKeyStruct struct {
-	ID          int             `json:"id"`
-	Authorized  time.Time       `json:"authorized"`
-	Comment     string          `json:"comment"`
-	Fingerprint string          `json:"fingerprint"`
-	Key         string          `json:"key"`
-	Owner       shortUserStruct `json:"owner"`
-	LastUsed    time.Time       `json:"last_used"`
+	ID          int        `json:"id"`
+	Authorized  time.Time  `json:"authorized"`
+	Comment     string     `json:"comment"`
+	Fingerprint string     `json:"fingerprint"`
+	Key         string     `json:"key"`
+	Owner       userStruct `json:"owner"`
+	LastUsed    time.Time  `json:"last_used"`
 }
 
 type pgpKeyStruct struct {
-	ID         int             `json:"id"`
-	Key        string          `json:"key"`
-	KeyID      string          `json:"key_id"`
-	Email      string          `json:"email"`
-	Authorized time.Time       `json:"authorized"`
-	Owner      shortUserStruct `json:"owner"`
+	ID         int        `json:"id"`
+	Key        string     `json:"key"`
+	KeyID      string     `json:"key_id"`
+	Email      string     `json:"email"`
+	Authorized time.Time  `json:"authorized"`
+	Owner      userStruct `json:"owner"`
 }
 
 // MetaEdit If true, then edit own profile information

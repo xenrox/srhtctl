@@ -13,13 +13,9 @@ import (
 	"git.xenrox.net/~xenrox/srhtctl/helpers"
 )
 
-type shortUserStruct struct {
-	CName string `json:"canonical_name"`
-	Name  string `json:"name"`
-}
-
 type userStruct struct {
-	shortUserStruct
+	CName    string  `json:"canonical_name"`
+	Name     string  `json:"name"`
 	Email    string  `json:"email"`
 	URL      *string `json:"url"`
 	Location *string `json:"location"`

@@ -27,14 +27,14 @@ type taskStruct struct {
 }
 
 type buildStruct struct {
-	ID       int             `json:"id"`
-	Status   string          `json:"status"`
-	SetupLog string          `json:"setup_log"`
-	Tasks    []taskStruct    `json:"tasks"`
-	Note     string          `json:"note"`
-	Tags     *string         `json:"tags"`
-	Runner   *string         `json:"runner"`
-	Owner    shortUserStruct `json:"owner"`
+	ID       int          `json:"id"`
+	Status   string       `json:"status"`
+	SetupLog string       `json:"setup_log"`
+	Tasks    []taskStruct `json:"tasks"`
+	Note     string       `json:"note"`
+	Tags     *string      `json:"tags"`
+	Runner   *string      `json:"runner"`
+	Owner    userStruct   `json:"owner"`
 }
 
 // BuildNote is a description of a build
