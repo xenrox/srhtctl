@@ -18,7 +18,7 @@ The project is hosted at https://git.xenrox.net/~xenrox/srhtctl`,
 // Execute is the entrypoint for the main fucntion.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
+		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 }
