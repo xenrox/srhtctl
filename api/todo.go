@@ -64,7 +64,11 @@ func PrintTickets(args []string) error {
 	var tickets ticketPagerStruct
 
 	if TrackerName != "" {
-		_ = getTickets(&tickets, TrackerName)
+		err := getTickets(&tickets, TrackerName)
+		if err != nil {
+			return err
+		}
+
 		for _, ticket := range tickets.Results {
 			fmt.Print(ticket.filterByStatus())
 		}
@@ -72,10 +76,16 @@ func PrintTickets(args []string) error {
 	}
 
 	var trackers trackerPagerStruct
-	_ = getTrackers(&trackers)
+	err := getTrackers(&trackers)
+	if err != nil {
+		return err
+	}
 
 	for _, tracker := range trackers.Results {
-		_ = getTickets(&tickets, tracker.Name)
+		err = getTickets(&tickets, tracker.Name)
+		if err != nil {
+			return err
+		}
 
 		for i, ticket := range tickets.Results {
 			if i == 0 {
