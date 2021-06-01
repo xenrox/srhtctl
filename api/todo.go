@@ -59,6 +59,30 @@ type ticketPagerStruct struct {
 	ResultsPerPage int             `json:"results_per_page"`
 }
 
+type commentStruct struct {
+	ID        int          `json:"id"`
+	Created   string       `json:"created"`
+	Submitter userStruct   `json:"submitter"`
+	Text      string       `json:"text"`
+	Ticket    ticketStruct `json:"ticket"`
+}
+
+type eventStruct struct {
+	ID            int            `json:"id"`
+	Created       string         `json:"created"`
+	EventType     []string       `json:"event_type"`
+	OldStatus     *string        `json:"old_status"`
+	OldResoltion  *string        `json:"old_resolution"`
+	NewStatus     *string        `json:"new_status"`
+	NewResolution *string        `json:"new_resolution"`
+	User          *userStruct    `json:"user"`
+	Ticket        *ticketStruct  `json:"ticket"`
+	Comment       *commentStruct `json:"comment"`
+	Label         *[]string      `json:"label"`
+	ByUser        *userStruct    `json:"by_user"`
+	FromTicket    *ticketStruct  `json:"from_ticket"`
+}
+
 // PrintTickets prints out tickets of a user
 func PrintTickets(args []string) error {
 	var tickets ticketPagerStruct
