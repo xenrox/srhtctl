@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"git.xenrox.net/~xenrox/srhtctl/api"
 	"git.xenrox.net/~xenrox/srhtctl/config"
 	"github.com/spf13/cobra"
 )
@@ -27,4 +28,6 @@ func init() {
 	cobra.OnInitialize()
 
 	rootCmd.PersistentFlags().StringVar(&config.ConfigPath, "config", "", "Path to config.ini")
+
+	rootCmd.PersistentFlags().StringVarP(&api.UserName, "user", "u", "", "Sourcehut username")
 }

@@ -13,6 +13,9 @@ import (
 	"git.xenrox.net/~xenrox/srhtctl/helpers"
 )
 
+// UserName is the sourcehut username
+var UserName string
+
 type userStruct struct {
 	CName    string  `json:"canonical_name"`
 	Name     string  `json:"name"`
