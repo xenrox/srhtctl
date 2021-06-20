@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"git.xenrox.net/~xenrox/srhtctl/config"
+	"git.xenrox.net/~xenrox/srhtctl/helpers"
 )
 
 // TicketStatus is the status of a ticket
@@ -123,7 +124,14 @@ func PrintTickets(args []string) error {
 }
 
 func getTickets(response *ticketPagerStruct, trackerName string) error {
-	url := fmt.Sprintf("%s/api/trackers/%s/tickets", config.GetURL("todo"), trackerName)
+	var url string
+	if UserName != "" {
+		url = fmt.Sprintf("%s/api/user/%s/trackers/%s/tickets",
+			config.GetURL("todo"), helpers.TransformCanonical(UserName), trackerName)
+	} else {
+		url = fmt.Sprintf("%s/api/trackers/%s/tickets", config.GetURL("todo"), trackerName)
+	}
+
 	err := Request(url, "GET", "", &response)
 	if err != nil {
 		return err
@@ -139,7 +147,14 @@ func (ticket ticketStruct) filterByStatus() string {
 }
 
 func getTrackers(response *trackerPagerStruct) error {
-	url := fmt.Sprintf("%s/api/trackers", config.GetURL("todo"))
+	var url string
+	if UserName != "" {
+		url = fmt.Sprintf("%s/api/user/%s/trackers", config.GetURL("todo"),
+			helpers.TransformCanonical(UserName))
+	} else {
+		url = fmt.Sprintf("%s/api/trackers", config.GetURL("todo"))
+	}
+
 	err := Request(url, "GET", "", &response)
 	if err != nil {
 		return err
